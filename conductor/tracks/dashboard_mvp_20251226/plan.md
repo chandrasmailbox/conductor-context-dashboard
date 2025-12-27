@@ -45,7 +45,7 @@ Enable the dashboard to connect to a public Git repository, fetch its contents, 
     *   - [x] Task: Write Tests for identifying Conductor files (`tracks.md`, `plan.md`, `setup_state.json`) (a9f562f)
     *   - [x] Task: Implement backend logic to locate Conductor artifact files within a repository (4170922)
 *   **2.4 `setup_state.json` Parsing**
-    *   - [ ] Task: Write Tests for parsing `setup_state.json`
+    *   - [~] Task: Write Tests for parsing `setup_state.json`
     *   - [ ] Task: Implement backend parser for `setup_state.json` to extract `last_successful_step`
 *   **2.5 `tracks.md` Parsing**
     *   - [ ] Task: Write Tests for parsing `tracks.md`
