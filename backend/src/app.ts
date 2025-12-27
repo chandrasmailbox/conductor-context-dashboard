@@ -10,6 +10,10 @@ app.get('/', (req, res) => {
   res.status(200).send('Hello World!');
 });
 
+app.get('/hello', (req, res) => {
+  res.status(200).send('Hello World!');
+});
+
 // For testing purposes, export the app
 export default app;
 
