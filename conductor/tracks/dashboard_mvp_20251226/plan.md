@@ -24,7 +24,7 @@ Establish the foundational project structure, set up the development environment
     *   - [x] Task: Write Tests for a simple "hello world" API endpoint (a15cbfb)
     *   - [x] Task: Implement a basic API endpoint for backend health check (6902eb3)
 *   **1.5 Basic Frontend Shell**
-    *   - [~] Task: Write Tests for basic dashboard layout
+    *   - [x] Task: Write Tests for basic dashboard layout (50c25db)
     *   - [ ] Task: Implement the initial responsive dashboard layout with placeholder content
 *   - [ ] Task: Conductor - User Manual Verification 'Phase 1: Setup & Core Infrastructure' (Protocol in workflow.md)
 
