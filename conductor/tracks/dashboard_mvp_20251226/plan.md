@@ -36,7 +36,7 @@ Enable the dashboard to connect to a public Git repository, fetch its contents, 
 ### Tasks
 
 *   **2.1 GitHub API Integration Setup**
-    *   - [~] Task: Write Tests for GitHub API client
+    *   - [x] Task: Write Tests for GitHub API client (16c894f)
     *   - [ ] Task: Implement GitHub REST API client in backend
 *   **2.2 Repository Cloning/Fetching**
     *   - [ ] Task: Write Tests for fetching repository contents (mock Git operations)
