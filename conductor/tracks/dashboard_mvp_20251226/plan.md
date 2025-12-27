@@ -42,7 +42,7 @@ Enable the dashboard to connect to a public Git repository, fetch its contents, 
     *   - [x] Task: Write Tests for fetching repository contents (mock Git operations) (3b34f62)
     *   - [x] Task: Implement backend logic to fetch public repository contents (e.g., using `isomorphic-git` or similar) (0244566)
 *   **2.3 Conductor Artifact Identification**
-    *   - [ ] Task: Write Tests for identifying Conductor files (`tracks.md`, `plan.md`, `setup_state.json`)
+    *   - [~] Task: Write Tests for identifying Conductor files (`tracks.md`, `plan.md`, `setup_state.json`)
     *   - [ ] Task: Implement backend logic to locate Conductor artifact files within a repository
 *   **2.4 `setup_state.json` Parsing**
     *   - [ ] Task: Write Tests for parsing `setup_state.json`
