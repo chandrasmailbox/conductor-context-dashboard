@@ -40,7 +40,7 @@ Enable the dashboard to connect to a public Git repository, fetch its contents, 
     *   - [x] Task: Implement GitHub REST API client in backend (3e2787f)
 *   **2.2 Repository Cloning/Fetching**
     *   - [x] Task: Write Tests for fetching repository contents (mock Git operations) (3b34f62)
-    *   - [~] Task: Implement backend logic to fetch public repository contents (e.g., using `isomorphic-git` or similar)
+    *   - [x] Task: Implement backend logic to fetch public repository contents (e.g., using `isomorphic-git` or similar) (0244566)
 *   **2.3 Conductor Artifact Identification**
     *   - [ ] Task: Write Tests for identifying Conductor files (`tracks.md`, `plan.md`, `setup_state.json`)
     *   - [ ] Task: Implement backend logic to locate Conductor artifact files within a repository
