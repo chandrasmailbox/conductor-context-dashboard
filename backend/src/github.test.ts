@@ -11,8 +11,15 @@ jest.mock('axios', () => ({
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('GitHub API Client', () => {
+  let consoleErrorSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
   afterEach(() => {
     jest.clearAllMocks(); // Clear mocks after each test
+    consoleErrorSpy.mockRestore(); // Restore original console.error
   });
 
   it('should fetch content of a file from a public repository', async () => {
@@ -34,6 +41,7 @@ describe('GitHub API Client', () => {
         },
       }
     );
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
   it('should throw an error if fetching a file fails with an AxiosError (with response)', async () => {
@@ -50,6 +58,8 @@ describe('GitHub API Client', () => {
 
     await expect(fetchRepositoryFile(owner, repo, path)).rejects.toThrow(errorMessage);
     expect(mockedAxios.isAxiosError).toHaveBeenCalledWith(axiosError);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(`Error fetching file from GitHub: ${errorMessage}`);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(`Status: 404, Data: "Not Found"`);
   });
 
   it('should throw an error if fetching a file fails with an AxiosError (no response)', async () => {
@@ -66,6 +76,8 @@ describe('GitHub API Client', () => {
 
     await expect(fetchRepositoryFile(owner, repo, path)).rejects.toThrow(errorMessage);
     expect(mockedAxios.isAxiosError).toHaveBeenCalledWith(axiosError);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(`Error fetching file from GitHub: ${errorMessage}`);
+    expect(consoleErrorSpy).not.toHaveBeenCalledWith(expect.stringContaining('Status:')); // Ensure no status logging
   });
 
   it('should throw an error if fetching a file fails with a generic error', async () => {
@@ -80,6 +92,7 @@ describe('GitHub API Client', () => {
 
     await expect(fetchRepositoryFile(owner, repo, path)).rejects.toThrow(errorMessage);
     expect(mockedAxios.isAxiosError).toHaveBeenCalledWith(genericError);
+    expect(consoleErrorSpy).toHaveBeenCalledWith('An unexpected error occurred:', genericError);
   });
 
   it('should fetch the contents of a directory from a public repository', async () => {
@@ -104,6 +117,7 @@ describe('GitHub API Client', () => {
         },
       }
     );
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
   it('should throw an error if fetching directory contents fails with an AxiosError (with response)', async () => {
@@ -120,6 +134,8 @@ describe('GitHub API Client', () => {
 
     await expect(fetchRepositoryContents(owner, repo, path)).rejects.toThrow(errorMessage);
     expect(mockedAxios.isAxiosError).toHaveBeenCalledWith(axiosError);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(`Error fetching directory contents from GitHub: ${errorMessage}`);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(`Status: 404, Data: "Not Found"`);
   });
 
   it('should throw an error if fetching directory contents fails with an AxiosError (no response)', async () => {
@@ -136,6 +152,8 @@ describe('GitHub API Client', () => {
 
     await expect(fetchRepositoryContents(owner, repo, path)).rejects.toThrow(errorMessage);
     expect(mockedAxios.isAxiosError).toHaveBeenCalledWith(axiosError);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(`Error fetching directory contents from GitHub: ${errorMessage}`);
+    expect(consoleErrorSpy).not.toHaveBeenCalledWith(expect.stringContaining('Status:'));
   });
 
   it('should throw an error if fetching directory contents fails with a generic error', async () => {
@@ -150,5 +168,6 @@ describe('GitHub API Client', () => {
 
     await expect(fetchRepositoryContents(owner, repo, path)).rejects.toThrow(errorMessage);
     expect(mockedAxios.isAxiosError).toHaveBeenCalledWith(genericError);
+    expect(consoleErrorSpy).toHaveBeenCalledWith('An unexpected error occurred:', genericError);
   });
 });
