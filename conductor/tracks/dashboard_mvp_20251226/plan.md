@@ -46,7 +46,7 @@ Enable the dashboard to connect to a public Git repository, fetch its contents, 
     *   - [x] Task: Implement backend logic to locate Conductor artifact files within a repository (4170922)
 *   **2.4 `setup_state.json` Parsing**
     *   - [x] Task: Write Tests for parsing `setup_state.json` (6c17772)
-    *   - [ ] Task: Implement backend parser for `setup_state.json` to extract `last_successful_step`
+    *   - [~] Task: Implement backend parser for `setup_state.json` to extract `last_successful_step`
 *   **2.5 `tracks.md` Parsing**
     *   - [ ] Task: Write Tests for parsing `tracks.md`
     *   - [ ] Task: Implement backend parser for `tracks.md` to extract track descriptions and links
