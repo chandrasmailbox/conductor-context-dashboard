@@ -22,7 +22,7 @@ Establish the foundational project structure, set up the development environment
     *   - [x] Task: Implement shared environment configuration (e.g., .env handling) (c90adba)
 *   **1.4 Basic API Endpoint**
     *   - [x] Task: Write Tests for a simple "hello world" API endpoint (a15cbfb)
-    *   - [~] Task: Implement a basic API endpoint for backend health check
+    *   - [x] Task: Implement a basic API endpoint for backend health check (6902eb3)
 *   **1.5 Basic Frontend Shell**
     *   - [ ] Task: Write Tests for basic dashboard layout
     *   - [ ] Task: Implement the initial responsive dashboard layout with placeholder content
