@@ -21,7 +21,7 @@ Establish the foundational project structure, set up the development environment
     *   - [x] Task: Write Tests for environment variable loading (aded2c1)
     *   - [x] Task: Implement shared environment configuration (e.g., .env handling) (c90adba)
 *   **1.4 Basic API Endpoint**
-    *   - [ ] Task: Write Tests for a simple "hello world" API endpoint
+    *   - [~] Task: Write Tests for a simple "hello world" API endpoint
     *   - [ ] Task: Implement a basic API endpoint for backend health check
 *   **1.5 Basic Frontend Shell**
     *   - [ ] Task: Write Tests for basic dashboard layout
