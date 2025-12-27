@@ -3,6 +3,8 @@ import express from 'express';
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(express.json()); // Add this line to enable JSON body parsing
+
 app.get('/', (req, res) => {
   res.status(200).send('Hello World!');
 });
