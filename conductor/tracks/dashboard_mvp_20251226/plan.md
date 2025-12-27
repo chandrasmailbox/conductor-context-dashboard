@@ -4,7 +4,7 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 
 ---
 
-## Phase 1: Setup & Core Infrastructure
+## Phase 1: Setup & Core Infrastructure [checkpoint: 168f7c4]
 
 ### Goal
 Establish the foundational project structure, set up the development environment for both frontend and backend, and create a basic shell for the application.
@@ -26,7 +26,7 @@ Establish the foundational project structure, set up the development environment
 *   **1.5 Basic Frontend Shell**
     *   - [x] Task: Write Tests for basic dashboard layout (50c25db)
     *   - [x] Task: Implement the initial responsive dashboard layout with placeholder content (2498de6)
-*   - [~] Task: Conductor - User Manual Verification 'Phase 1: Setup & Core Infrastructure' (Protocol in workflow.md)
+*   - [x] Task: Conductor - User Manual Verification 'Phase 1: Setup & Core Infrastructure' (Protocol in workflow.md)
 
 ## Phase 2: Repository Integration & Conductor Parsing
 
