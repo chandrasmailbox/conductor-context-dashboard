@@ -11,10 +11,10 @@ Establish the foundational project structure, set up the development environment
 
 ### Tasks
 
-*   ** [x] Task: 1.1  Frontend Project Initialization**
+*   - [x] Task: 1.1  Frontend Project Initialization**
     *   - [x] Task: Write Tests for basic React app setup (e445591)
     *   - [x] Task: Implement React with TypeScript, Vite, and Tailwind CSS setup (17ab1c2)
-*   ** [x] Task: 1.2 Backend Project Initialization**
+*   - [x] Task: 1.2 Backend Project Initialization**
     *   - [x] Task: Write Tests for basic Express.js server (77cd5aa)
     *   - [x] Task: Implement Node.js with Express.js and TypeScript setup (53e30f0)
 *   **1.3 Cross-Environment Configuration**
