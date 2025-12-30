@@ -19,7 +19,7 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 - [x] Task: 1.5 Basic Frontend Shell**
     *   - [x] Task: Write Tests for basic dashboard layout (50c25db)
     *   - [x] Task: Implement the initial responsive dashboard layout with placeholder content (2498de6)
-- [x] Task: Conductor - User Manual Verification 'Phase 1: Setup & Core Infrastructure' (Protocol in workflow.md)
+- [x] Task:  Conductor - User Manual Verification 'Phase 1: Setup & Core Infrastructure' (Protocol in workflow.md)
 
 ## Phase 2: Repository Integration & Conductor Parsing
 
