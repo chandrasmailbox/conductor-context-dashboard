@@ -19,7 +19,8 @@ describe('DonutChart', () => {
 
   it('should display the progress percentage text', () => {
     render(<DonutChart progress={75} />);
-    expect(screen.getByText('75')).toBeInTheDocument();
+    expect(screen.getByText(/75/)).toBeInTheDocument();
+    expect(screen.getByText(/%/)).toBeInTheDocument();
     expect(screen.getByText(/percent/i)).toBeInTheDocument();
   });
 });

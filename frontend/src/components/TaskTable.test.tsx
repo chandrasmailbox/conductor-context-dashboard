@@ -50,12 +50,12 @@ describe('TaskTable', () => {
   });
 
   it('should display status badges', () => {
-     render(<TaskTable tasks={[{ id: '1', description: 'Test', status: 'completed' }]} />);
-     // Using querySelector to target the badge specifically or filter by tag
-     const badges = screen.getAllByText(/COMPLETED/i);
-     const badge = badges.find(b => b.tagName === 'SPAN');
-     expect(badge).toBeInTheDocument();
-     expect(badge).toHaveClass('text-emerald-400');
+     render(<TaskTable tasks={[{ id: '1', description: 'Task 1', status: 'completed' }]} />);
+     const badges = screen.getAllByRole('cell');
+     const badge = badges.find(b => b.tagName === 'SPAN' || b.querySelector('span'));
+     const span = badge?.querySelector('span') || badge;
+     expect(span).toBeInTheDocument();
+     expect(span).toHaveClass('text-brand-success');
   });
 
   it('should filter tasks by status', () => {

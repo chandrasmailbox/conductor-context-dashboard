@@ -22,15 +22,14 @@ describe('StageTimeline', () => {
       expect(screen.getByRole('region', { name: /stage timeline/i })).toBeInTheDocument();
   });
 
-  it('should visually indicate completed stages', () => {
-      const { container } = render(<StageTimeline stages={[{ id: '1', title: 'Done', status: 'completed' }]} />);
-      const indicator = container.querySelector('.text-emerald-400');
-      expect(indicator).toBeInTheDocument();
-  });
-
-   it('should visually indicate in-progress stages', () => {
-      const { container } = render(<StageTimeline stages={[{ id: '1', title: 'WIP', status: 'in_progress' }]} />);
-      const indicator = container.querySelector('.text-blue-400');
-      expect(indicator).toBeInTheDocument();
-  });
-});
+    it('should visually indicate completed stages', () => {
+        const { container } = render(<StageTimeline stages={[{ id: '1', title: 'Done', status: 'completed' }]} />);
+        const indicator = container.querySelector('.text-brand-success');
+        expect(indicator).toBeInTheDocument();
+    });
+  
+    it('should visually indicate in-progress stages', () => {
+        const { container } = render(<StageTimeline stages={[{ id: '1', title: 'WIP', status: 'in_progress' }]} />);
+        const indicator = container.querySelector('.text-brand-primary');
+        expect(indicator).toBeInTheDocument();
+    });});

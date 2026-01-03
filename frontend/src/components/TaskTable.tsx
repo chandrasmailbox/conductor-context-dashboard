@@ -47,13 +47,13 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks }) => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <label htmlFor="status-filter" className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Filter Status</label>
+          <label htmlFor="status-filter" className="text-[10px] font-bold text-brand-text-muted uppercase tracking-widest">Filter Status</label>
           <select
             id="status-filter"
             aria-label="Filter by status"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-md py-1.5 px-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer"
+            className="bg-brand-bg-overlay border border-brand-border text-brand-text-secondary text-xs rounded-md py-1.5 px-3 focus:ring-2 focus:ring-brand-primary outline-none transition-all cursor-pointer"
           >
             <option value="all">ALL ENTRIES</option>
             <option value="completed">COMPLETED</option>
@@ -62,43 +62,43 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks }) => {
             <option value="blocked">BLOCKED</option>
           </select>
         </div>
-        <div className="text-[10px] font-mono text-slate-500 bg-slate-800/50 px-2 py-1 rounded">
+        <div className="text-[10px] font-mono text-brand-text-muted bg-brand-bg-overlay/50 px-2 py-1 rounded">
           DISPLAYING {sortedTasks.length} / {tasks.length} RECORDS
         </div>
       </div>
       
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-800" role="table">
+        <table className="min-w-full divide-y divide-brand-border" role="table">
           <thead>
             <tr>
               <th
-                className="px-4 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest cursor-pointer hover:text-slate-300 transition-colors"
+                className="px-4 py-3 text-left text-[10px] font-bold text-brand-text-muted uppercase tracking-widest cursor-pointer hover:text-brand-text-secondary transition-colors"
                 onClick={() => handleSort('description')}
               >
                 Data Description {sortField === 'description' && (sortDirection === 'asc' ? '↑' : '↓')}
               </th>
               <th
-                className="px-4 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest cursor-pointer hover:text-slate-300 transition-colors"
+                className="px-4 py-3 text-left text-[10px] font-bold text-brand-text-muted uppercase tracking-widest cursor-pointer hover:text-brand-text-secondary transition-colors"
                 onClick={() => handleSort('status')}
               >
                 Status Flag {sortField === 'status' && (sortDirection === 'asc' ? '↑' : '↓')}
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/50">
+          <tbody className="divide-y divide-brand-border/50">
             {sortedTasks.map((task) => (
-              <tr key={task.id} className="hover:bg-slate-800/30 transition-colors group">
-                <td className="px-4 py-4 text-sm text-slate-300 font-medium">
+              <tr key={task.id} className="hover:bg-brand-bg-overlay/30 transition-colors group">
+                <td className="px-4 py-4 text-sm text-brand-text-secondary font-medium">
                   {task.description}
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap text-sm">
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono tracking-tighter ${
                       task.status === 'completed'
-                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                        ? 'bg-brand-success/10 text-brand-success border border-brand-success/20'
                         : task.status === 'in_progress'
-                        ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                        : 'bg-slate-800 text-slate-500 border border-slate-700'
+                        ? 'bg-brand-primary/10 text-brand-primary border border-brand-primary/20'
+                        : 'bg-brand-bg-overlay text-brand-text-muted border border-brand-border'
                     }`}
                   >
                     {task.status.toUpperCase()}

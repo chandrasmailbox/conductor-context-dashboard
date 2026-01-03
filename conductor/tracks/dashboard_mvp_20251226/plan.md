@@ -79,16 +79,10 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 
 ## Phase 5: Theme Switching & Enhancements [checkpoint: TBD]
 
-- [ ] Task: 5.1  Tailwind CSS Theme Configuration
-    *   - [ ] Task: Write Tests for dynamic theme loading
-    *   - [ ] Task: Configure Tailwind CSS to support multiple themes
-- [ ] Task: 5.2  Theme Selector UI
-    *   - [ ] Task: Write Tests for Theme Selector component
-    *   - [ ] Task: Implement a UI component allowing users to select from up to 10 predefined Tailwind CSS themes
-- [ ] Task: 5.3  Theme Persistence
-    *   - [ ] Task: Write Tests for theme preference storage
-    *   - [ ] Task: Implement logic to persist user's theme preference (e.g., using local storage)
-- [ ] Task: 5.4  Responsive Adjustments & Cross-Browser Compatibility
+- [x] Task: 5.1  Tailwind CSS Theme Configuration (ab05145)
+- [x] Task: 5.2  Theme Selector UI (6fb3ab7)
+- [x] Task: 5.3  Theme Persistence (6fb3ab7)
+- [~] Task: 5.4  Responsive Adjustments & Cross-Browser Compatibility
     *   - [ ] Task: Write Tests for responsive breakpoints and cross-browser consistency
     *   - [ ] Task: Perform final responsive adjustments and ensure cross-browser compatibility
 - [ ] Task: 5.5  Comprehensive Error Handling & User Feedback

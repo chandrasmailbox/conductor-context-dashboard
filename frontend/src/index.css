@@ -1,14 +1,170 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-bg-base: var(--brand-bg-base);
+  --color-brand-bg-surface: var(--brand-bg-surface);
+  --color-brand-bg-overlay: var(--brand-bg-overlay);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-success: var(--brand-success);
+  --color-brand-warning: var(--brand-warning);
+  --color-brand-border: var(--brand-border);
+  --color-brand-text-primary: var(--brand-text-primary);
+  --color-brand-text-secondary: var(--brand-text-secondary);
+  --color-brand-text-muted: var(--brand-text-muted);
+}
+
 :root {
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   color-scheme: dark;
 }
 
+/* Base Theme: Control Room */
+:root, .theme-control-room {
+  --brand-bg-base: #020617; /* slate-950 */
+  --brand-bg-surface: #0f172a; /* slate-900 */
+  --brand-bg-overlay: #1e293b; /* slate-800 */
+  --brand-primary: #3b82f6; /* blue-500 */
+  --brand-secondary: #2563eb; /* blue-600 */
+  --brand-success: #10b981; /* emerald-500 */
+  --brand-warning: #fbbf24; /* amber-400 */
+  --brand-border: #1e293b; /* slate-800 */
+  --brand-text-primary: #f8fafc; /* slate-50 */
+  --brand-text-secondary: #cbd5e1; /* slate-300 */
+  --brand-text-muted: #64748b; /* slate-500 */
+}
+
+.theme-emerald {
+  --brand-bg-base: #064e3b;
+  --brand-bg-surface: #065f46;
+  --brand-bg-overlay: #047857;
+  --brand-primary: #34d399;
+  --brand-secondary: #10b981;
+  --brand-success: #6ee7b7;
+  --brand-warning: #fcd34d;
+  --brand-border: #059669;
+  --brand-text-primary: #ecfdf5;
+  --brand-text-secondary: #d1fae5;
+  --brand-text-muted: #6ee7b7;
+}
+
+.theme-cyberpunk {
+  --brand-bg-base: #000000;
+  --brand-bg-surface: #1a1a1a;
+  --brand-bg-overlay: #2d2d2d;
+  --brand-primary: #ff00ff; /* magenta */
+  --brand-secondary: #00ffff; /* cyan */
+  --brand-success: #39ff14; /* neon green */
+  --brand-warning: #ffff00; /* yellow */
+  --brand-border: #ff00ff;
+  --brand-text-primary: #ffffff;
+  --brand-text-secondary: #00ffff;
+  --brand-text-muted: #888888;
+}
+
+.theme-monotone {
+  --brand-bg-base: #18181b;
+  --brand-bg-surface: #27272a;
+  --brand-bg-overlay: #3f3f46;
+  --brand-primary: #fafafa;
+  --brand-secondary: #e4e4e7;
+  --brand-success: #d4d4d8;
+  --brand-warning: #a1a1aa;
+  --brand-border: #52525b;
+  --brand-text-primary: #ffffff;
+  --brand-text-secondary: #d4d4d8;
+  --brand-text-muted: #71717a;
+}
+
+.theme-midnight {
+  --brand-bg-base: #0f0b1e;
+  --brand-bg-surface: #1a1435;
+  --brand-bg-overlay: #261f4d;
+  --brand-primary: #8b5cf6;
+  --brand-secondary: #7c3aed;
+  --brand-success: #10b981;
+  --brand-warning: #f59e0b;
+  --brand-border: #3d317c;
+  --brand-text-primary: #f5f3ff;
+  --brand-text-secondary: #ddd6fe;
+  --brand-text-muted: #a78bfa;
+}
+
+.theme-volcano {
+  --brand-bg-base: #1c0a0a;
+  --brand-bg-surface: #2d0f0f;
+  --brand-bg-overlay: #451a1a;
+  --brand-primary: #ef4444;
+  --brand-secondary: #dc2626;
+  --brand-success: #10b981;
+  --brand-warning: #f97316;
+  --brand-border: #7f1d1d;
+  --brand-text-primary: #fef2f2;
+  --brand-text-secondary: #fecaca;
+  --brand-text-muted: #f87171;
+}
+
+.theme-deep-sea {
+  --brand-bg-base: #04161a;
+  --brand-bg-surface: #082d35;
+  --brand-bg-overlay: #0c444f;
+  --brand-primary: #14b8a6;
+  --brand-secondary: #0d9488;
+  --brand-success: #22c55e;
+  --brand-warning: #eab308;
+  --brand-border: #134e4a;
+  --brand-text-primary: #f0fdfa;
+  --brand-text-secondary: #ccfbf1;
+  --brand-text-muted: #5eead4;
+}
+
+.theme-solarized {
+  --brand-bg-base: #002b36;
+  --brand-bg-surface: #073642;
+  --brand-bg-overlay: #586e75;
+  --brand-primary: #b58900;
+  --brand-secondary: #cb4b16;
+  --brand-success: #859900;
+  --brand-warning: #d33682;
+  --brand-border: #657b83;
+  --brand-text-primary: #fdf6e3;
+  --brand-text-secondary: #eee8d5;
+  --brand-text-muted: #93a1a1;
+}
+
+.theme-matrix {
+  --brand-bg-base: #000000;
+  --brand-bg-surface: #001100;
+  --brand-bg-overlay: #002200;
+  --brand-primary: #00ff00;
+  --brand-secondary: #008800;
+  --brand-success: #00ff00;
+  --brand-warning: #88ff88;
+  --brand-border: #00ff00;
+  --brand-text-primary: #00ff00;
+  --brand-text-secondary: #00cc00;
+  --brand-text-muted: #006600;
+}
+
+.theme-high-contrast {
+  --brand-bg-base: #000000;
+  --brand-bg-surface: #000000;
+  --brand-bg-overlay: #000000;
+  --brand-primary: #ffffff;
+  --brand-secondary: #ffffff;
+  --brand-success: #ffffff;
+  --brand-warning: #ffffff;
+  --brand-border: #ffffff;
+  --brand-text-primary: #ffffff;
+  --brand-text-secondary: #ffffff;
+  --brand-text-muted: #ffffff;
+}
+
 body {
   margin: 0;
-  background-color: #0f172a; /* slate-900 */
-  color: #f8fafc; /* slate-50 */
+  background-color: var(--brand-bg-base);
+  color: var(--brand-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Custom Scrollbar for Control Room look */
@@ -18,14 +174,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: var(--brand-bg-base);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: var(--brand-bg-overlay);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: var(--brand-text-muted);
 }
