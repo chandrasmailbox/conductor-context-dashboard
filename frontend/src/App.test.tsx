@@ -86,6 +86,7 @@ describe('App', () => {
     expect(await screen.findByRole('region', { name: /stage timeline/i })).toBeInTheDocument();
     expect(await screen.findByRole('table')).toBeInTheDocument();
     expect(await screen.findByRole('progressbar')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /recent activity/i })).toBeInTheDocument();
     expect(screen.getByText(/Mock Plan/i)).toBeInTheDocument();
   });
 });

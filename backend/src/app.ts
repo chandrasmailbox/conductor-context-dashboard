@@ -1,6 +1,6 @@
 import express from 'express';
 import { config } from './config.js';
-import { fetchRepositoryContents, fetchRepositoryFile } from './github.js';
+import { fetchRepositoryContents, fetchRepositoryFile, fetchRecentCommits } from './github.js';
 import { identifyConductorFiles, parseSetupState, parseTracksMd, parsePlanMd } from './conductor-parser.js';
 
 const app = express();
@@ -34,8 +34,16 @@ app.post('/api/v1/verify-phase-2', async (req, res) => {
 
     const contents = await fetchRepositoryContents(owner, repo);
     const conductorFiles = identifyConductorFiles(contents);
+    const commits = await fetchRecentCommits(owner, repo);
 
-    const parsedData: any = {};
+    const parsedData: any = {
+      commits: commits.map(c => ({
+        sha: c.sha,
+        message: c.commit.message,
+        author: c.commit.author.name,
+        date: c.commit.author.date,
+      }))
+    };
 
     for (const file of conductorFiles) {
       const content = await fetchRepositoryFile(owner, repo, file.path);

@@ -5,7 +5,17 @@ export interface GitHubContent {
     name: string;
     path: string;
     type: 'file' | 'dir';
-    // Add other properties as needed from GitHub API response
+}
+
+export interface GitHubCommit {
+    sha: string;
+    commit: {
+        author: {
+            name: string;
+            date: string;
+        };
+        message: string;
+    };
 }
 
 const handleGitHubError = (error: unknown, context: string) => {
@@ -26,7 +36,7 @@ export const fetchRepositoryFile = async (owner: string, repo: string, path: str
             `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
             {
                 headers: {
-                    Accept: 'application/vnd.github.v3.raw', // Request raw content
+                    Accept: 'application/vnd.github.v3.raw',
                 },
             }
         );
@@ -42,12 +52,31 @@ export const fetchRepositoryContents = async (owner: string, repo: string, path:
             `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
             {
                 headers: {
-                    Accept: 'application/vnd.github.v3+json', // Request structured JSON for contents
+                    Accept: 'application/vnd.github.v3+json',
                 },
             }
         );
         return response.data;
     } catch (error) {
         handleGitHubError(error, 'fetching directory contents');
+    }
+};
+
+export const fetchRecentCommits = async (owner: string, repo: string, perPage: number = 10): Promise<GitHubCommit[]> => {
+    try {
+        const response = await axios.get<GitHubCommit[]>(
+            `https://api.github.com/repos/${owner}/${repo}/commits`,
+            {
+                params: {
+                    per_page: perPage,
+                },
+                headers: {
+                    Accept: 'application/vnd.github.v3+json',
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        handleGitHubError(error, 'fetching commits');
     }
 };

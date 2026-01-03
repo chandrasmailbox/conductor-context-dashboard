@@ -4,9 +4,11 @@ import StageTimeline, { Stage } from './components/StageTimeline';
 import TaskTable, { Task } from './components/TaskTable';
 import ProgressBar from './components/ProgressBar';
 import DonutChart from './components/DonutChart';
+import RecentActivityPanel, { Activity } from './components/RecentActivityPanel';
 
 interface SyncData {
   setupState?: string;
+  commits?: { sha: string; message: string; author: string; date: string }[];
   tracks?: { tracks: { title: string; link: string }[] };
   plan?: {
     title: string;
@@ -66,6 +68,13 @@ function App() {
     }))
   ) || [];
 
+  const activities: Activity[] = syncData?.commits?.map(c => ({
+    id: c.sha,
+    message: c.message,
+    author: c.author,
+    date: c.date
+  })) || [];
+
   const completedCount = allTasks.filter(t => t.status === 'completed').length;
   const progress = allTasks.length > 0 ? Math.floor((completedCount / allTasks.length) * 100) : 0;
 
@@ -124,15 +133,23 @@ function App() {
               </div>
             </section>
 
-            <section className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Stages</h2>
-              <StageTimeline stages={stages} />
-            </section>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 space-y-6">
+                <section className="bg-white p-6 rounded-lg shadow">
+                  <h2 className="text-xl font-semibold mb-4">Stages</h2>
+                  <StageTimeline stages={stages} />
+                </section>
 
-            <section className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Tasks</h2>
-              <TaskTable tasks={allTasks} />
-            </section>
+                <section className="bg-white p-6 rounded-lg shadow">
+                  <h2 className="text-xl font-semibold mb-4">Tasks</h2>
+                  <TaskTable tasks={allTasks} />
+                </section>
+              </div>
+
+              <div className="lg:col-span-1">
+                <RecentActivityPanel activities={activities} />
+              </div>
+            </div>
           </div>
         )}
       </main>
