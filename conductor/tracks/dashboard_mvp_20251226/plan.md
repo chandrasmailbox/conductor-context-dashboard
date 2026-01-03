@@ -82,9 +82,9 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 - [x] Task: 4.2  Donut Chart Visualization
     *   - [x] Task: Write Tests for Donut Chart component with Recharts (b28a0d2)
     *   - [x] Task: Implement Donut Chart using Recharts to display overall completion percentage (b28a0d2)
-- [ ] Task: 4.3  Recent Activity Panel
-    *   - [ ] Task: Write Tests for Recent Activity Panel
-    *   - [ ] Task: Implement a panel to display recent commits, extracting data from Git (e.g., commit messages, authors, dates)
+- [x] Task: 4.3  Recent Activity Panel
+    *   - [x] Task: Write Tests for Recent Activity Panel (41de6ae)
+    *   - [x] Task: Implement a panel to display recent commits, extracting data from Git (e.g., commit messages, authors, dates) (41de6ae)
 - [ ] Task: 4.4  Filtering Functionality
     *   - [ ] Task: Write Tests for filter logic by status and phase
     *   - [ ] Task: Implement frontend filtering capabilities for task table by status and phase
