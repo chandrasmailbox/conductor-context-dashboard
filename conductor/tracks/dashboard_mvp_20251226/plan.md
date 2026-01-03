@@ -88,9 +88,9 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 - [x] Task: 4.4  Filtering Functionality
     *   - [x] Task: Write Tests for filter logic by status and phase (c4361c2)
     *   - [x] Task: Implement frontend filtering capabilities for task table by status and phase (c4361c2)
-- [ ] Task: 4.5  Apply Control Room Aesthetic
-    *   - [ ] Task: Write Tests for theme application (visual checks)
-    *   - [ ] Task: Ensure the dark theme with high contrast and minimalist layout is consistently applied across the dashboard
+- [x] Task: 4.5  Apply Control Room Aesthetic
+    *   - [x] Task: Write Tests for theme application (visual checks) (3ea5a0f)
+    *   - [x] Task: Ensure the dark theme with high contrast and minimalist layout is consistently applied across the dashboard (3ea5a0f)
 - [ ] Task:  Conductor - User Manual Verification 'Phase 4: Dashboard Assembly & Visualization' (Protocol in workflow.md)
 
 ---
