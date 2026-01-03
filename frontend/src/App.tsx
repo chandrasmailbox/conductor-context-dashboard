@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css'
 import StageTimeline from './components/StageTimeline';
 import type { Stage } from './components/StageTimeline';
@@ -31,12 +31,20 @@ interface SyncData {
 }
 
 function App() {
-  const [repoUrl, setRepoUrl] = useState('');
-  const [syncMode, setSyncMode] = useState<'github' | 'local'>('github');
+  const [repoUrl, setRepoUrl] = useState(() => localStorage.getItem('repoUrl') || '');
+  const [syncMode, setSyncMode] = useState<'github' | 'local'>(() => (localStorage.getItem('syncMode') as 'github' | 'local') || 'github');
   const [syncData, setSyncData] = useState<SyncData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    localStorage.setItem('repoUrl', repoUrl);
+  }, [repoUrl]);
+
+  useEffect(() => {
+    localStorage.setItem('syncMode', syncMode);
+  }, [syncMode]);
 
   const handleSync = async () => {
     if (!repoUrl) return;

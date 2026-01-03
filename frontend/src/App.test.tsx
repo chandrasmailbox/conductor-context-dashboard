@@ -4,6 +4,12 @@ import { describe, it, expect, vi } from 'vitest';
 import App from './App';
 
 describe('App', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.clearAllMocks();
+    vi.resetAllMocks();
+  });
+
   it('should render a dashboard header', () => {
     render(<App />);
     expect(screen.getByRole('banner', { name: /dashboard header/i })).toBeInTheDocument();
@@ -112,5 +118,20 @@ describe('App', () => {
 
     expect(await screen.findByText(/Mission Status: Local Project/i)).toBeInTheDocument();
     expect(screen.getByText(/Local Task/i)).toBeInTheDocument();
+  });
+
+  it('should persist syncMode and repoUrl to localStorage', () => {
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+    render(<App />);
+    
+    const input = screen.getByPlaceholderText(/enter repository url/i);
+    fireEvent.change(input, { target: { value: 'https://github.com/user/repo' } });
+    
+    expect(setItemSpy).toHaveBeenCalledWith('repoUrl', 'https://github.com/user/repo');
+    
+    fireEvent.click(screen.getByText(/Local Mode/i));
+    expect(setItemSpy).toHaveBeenCalledWith('syncMode', 'local');
+    
+    setItemSpy.mockRestore();
   });
 });
