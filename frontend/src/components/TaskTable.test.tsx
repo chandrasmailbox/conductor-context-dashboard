@@ -1,0 +1,57 @@
+// frontend/src/components/TaskTable.test.tsx
+import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import TaskTable, { Task } from './TaskTable';
+
+describe('TaskTable', () => {
+  const tasks: Task[] = [
+    { id: '1', description: 'Task B', status: 'pending' },
+    { id: '2', description: 'Task A', status: 'completed' },
+    { id: '3', description: 'Task C', status: 'in_progress' },
+  ];
+
+  it('should render all tasks', () => {
+    render(<TaskTable tasks={tasks} />);
+    expect(screen.getByText('Task A')).toBeInTheDocument();
+    expect(screen.getByText('Task B')).toBeInTheDocument();
+    expect(screen.getByText('Task C')).toBeInTheDocument();
+  });
+
+  it('should sort tasks by description', () => {
+    render(<TaskTable tasks={tasks} />);
+    const descriptionHeader = screen.getByText(/description/i);
+    
+    // Default is Description ASC.
+    const rowsInitial = screen.getAllByRole('row');
+    expect(rowsInitial[1]).toHaveTextContent('Task A');
+    expect(rowsInitial[2]).toHaveTextContent('Task B');
+    expect(rowsInitial[3]).toHaveTextContent('Task C');
+    
+    // Click to toggle to DESC
+    fireEvent.click(descriptionHeader);
+    
+    const rowsDesc = screen.getAllByRole('row');
+    expect(rowsDesc[1]).toHaveTextContent('Task C');
+    expect(rowsDesc[2]).toHaveTextContent('Task B');
+    expect(rowsDesc[3]).toHaveTextContent('Task A');
+  });
+
+  it('should sort tasks by status', () => {
+    render(<TaskTable tasks={tasks} />);
+    const statusHeader = screen.getByText(/status/i);
+    
+    fireEvent.click(statusHeader);
+    
+    const rows = screen.getAllByRole('row');
+    // Alphabetical status: completed, in_progress, pending
+    expect(rows[1]).toHaveTextContent('completed');
+    expect(rows[2]).toHaveTextContent('in_progress');
+    expect(rows[3]).toHaveTextContent('pending');
+  });
+
+  it('should display status badges', () => {
+     render(<TaskTable tasks={[{ id: '1', description: 'Test', status: 'completed' }]} />);
+     const badge = screen.getByText('completed');
+     expect(badge).toHaveClass('bg-green-100');
+  });
+});
