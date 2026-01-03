@@ -34,15 +34,15 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 - [x] Task: 2.3  Conductor Artifact Identification
     *   - [x] Task: Write Tests for identifying Conductor files (tracks.md, plan.md, setup_state.json) (a9f562f)
     *   - [x] Task: Implement backend logic to locate Conductor artifact files within a repository (4170922)
-- [~] Task: 2.4  setup_state.json Parsing
+- [x] Task: 2.4  setup_state.json Parsing
     *   - [x] Task: Write Tests for parsing setup_state.json (6c17772)
-    *   - [~] Task: Implement backend parser for setup_state.json to extract last_successful_step
-- [ ] Task: 2.5  tracks.md Parsing
-    *   - [ ] Task: Write Tests for parsing tracks.md
-    *   - [ ] Task: Implement backend parser for tracks.md to extract track descriptions and links
-- [ ] Task: 2.6  plan.md Parsing
-    *   - [ ] Task: Write Tests for parsing plan.md
-    *   - [ ] Task: Implement backend parser for plan.md to extract phases, tasks, and their statuses
+    *   - [x] Task: Implement backend parser for setup_state.json to extract last_successful_step (6c17772)
+- [x] Task: 2.5  tracks.md Parsing
+    *   - [x] Task: Write Tests for parsing tracks.md (06cda62)
+    *   - [x] Task: Implement backend parser for tracks.md to extract track descriptions and links (06cda62)
+- [x] Task: 2.6  plan.md Parsing
+    *   - [x] Task: Write Tests for parsing plan.md (06cda62)
+    *   - [x] Task: Implement backend parser for plan.md to extract phases, tasks, and their statuses (06cda62)
 - [ ] Task: 2.7  Automatic Refresh Mechanism
     *   - [ ] Task: Write Tests for "Sync" button functionality
     *   - [ ] Task: Implement "Sync" button on frontend to trigger data refresh from backend
