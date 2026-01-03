@@ -43,9 +43,9 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 - [x] Task: 2.6  plan.md Parsing
     *   - [x] Task: Write Tests for parsing plan.md (06cda62)
     *   - [x] Task: Implement backend parser for plan.md to extract phases, tasks, and their statuses (06cda62)
-- [ ] Task: 2.7  Automatic Refresh Mechanism
-    *   - [ ] Task: Write Tests for "Sync" button functionality
-    *   - [ ] Task: Implement "Sync" button on frontend to trigger data refresh from backend
+- [x] Task: 2.7  Automatic Refresh Mechanism
+    *   - [x] Task: Write Tests for "Sync" button functionality (88d0788)
+    *   - [x] Task: Implement "Sync" button on frontend to trigger data refresh from backend (88d0788)
 - [ ] Task:  Conductor - User Manual Verification 'Phase 2: Repository Integration & Conductor Parsing' (Protocol in workflow.md)
 
 ---
