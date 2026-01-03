@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import './App.css'
-import StageTimeline, { Stage } from './components/StageTimeline';
-import TaskTable, { Task } from './components/TaskTable';
+import StageTimeline from './components/StageTimeline';
+import type { Stage } from './components/StageTimeline';
+import TaskTable from './components/TaskTable';
+import type { Task } from './components/TaskTable';
 import ProgressBar from './components/ProgressBar';
 import DonutChart from './components/DonutChart';
-import RecentActivityPanel, { Activity } from './components/RecentActivityPanel';
+import RecentActivityPanel from './components/RecentActivityPanel';
+import type { Activity } from './components/RecentActivityPanel';
 
 interface SyncData {
   setupState?: string;

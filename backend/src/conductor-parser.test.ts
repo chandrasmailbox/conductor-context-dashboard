@@ -13,8 +13,6 @@ describe('Conductor Parser', () => {
     consoleErrorSpy.mockRestore(); // Restore original console.error
   });
 
-import { GitHubContent } from './conductor-parser.js';
-// ...
   it('should identify Conductor files from a list of file paths', () => {
     const fileList: GitHubContent[] = [
       { name: 'README.md', path: 'README.md', type: 'file' },

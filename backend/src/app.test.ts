@@ -1,18 +1,27 @@
 import { jest, describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import request from 'supertest';
-import app from './app.js';
-import { fetchRepositoryContents, fetchRepositoryFile } from './github.js';
-import { identifyConductorFiles, parseSetupState, parseTracksMd, parsePlanMd } from './conductor-parser.js';
 
-jest.mock('./github');
-jest.mock('./conductor-parser');
+// Use unstable_mockModule for ESM mocking
+jest.unstable_mockModule('./github.js', () => ({
+  fetchRepositoryContents: jest.fn(),
+  fetchRepositoryFile: jest.fn(),
+  fetchRecentCommits: jest.fn(),
+}));
 
-const mockedFetchRepositoryContents = fetchRepositoryContents as jest.Mock;
-const mockedFetchRepositoryFile = fetchRepositoryFile as jest.Mock;
-const mockedIdentifyConductorFiles = identifyConductorFiles as jest.Mock;
-const mockedParseSetupState = parseSetupState as jest.Mock;
-const mockedParseTracksMd = parseTracksMd as jest.Mock;
-const mockedParsePlanMd = parsePlanMd as jest.Mock;
+jest.unstable_mockModule('./conductor-parser.js', () => ({
+  identifyConductorFiles: jest.fn(),
+  parseSetupState: jest.fn(),
+  parseTracksMd: jest.fn(),
+  parsePlanMd: jest.fn(),
+}));
+
+// We must use dynamic imports for everything that depends on the mocks
+const request = (await import('supertest')).default;
+const app = (await import('./app.js')).default;
+const github = await import('./github.js');
+const conductorParser = await import('./conductor-parser.js');
+
+const mockedGithub = github as jest.Mocked<typeof github>;
+const mockedConductorParser = conductorParser as jest.Mocked<typeof conductorParser>;
 
 describe('GET /', () => {
   it('should return 200 OK', async () => {
@@ -43,7 +52,7 @@ describe('POST /api/v1/verify-phase-2', () => {
   });
 
   it('should return 500 if there is an error processing the repository', async () => {
-    mockedFetchRepositoryContents.mockImplementationOnce(() => Promise.reject(new Error('Failed to fetch')));
+    mockedGithub.fetchRepositoryContents.mockImplementationOnce(() => Promise.reject(new Error('Failed to fetch')));
 
     const res = await request(app)
       .post('/api/v1/verify-phase-2')
@@ -55,22 +64,24 @@ describe('POST /api/v1/verify-phase-2', () => {
 
   it('should return parsed data for a valid repoUrl', async () => {
     const conductorFiles = [
-      { name: 'setup_state.json', path: 'conductor/setup_state.json' },
-      { name: 'tracks.md', path: 'conductor/tracks.md' },
-      { name: 'plan.md', path: 'conductor/tracks/some-track/plan.md' },
+      { name: 'setup_state.json', path: 'conductor/setup_state.json', type: 'file' as const },
+      { name: 'tracks.md', path: 'conductor/tracks.md', type: 'file' as const },
+      { name: 'plan.md', path: 'conductor/tracks/some-track/plan.md', type: 'file' as const },
     ];
-    mockedIdentifyConductorFiles.mockReturnValue(conductorFiles);
+    mockedConductorParser.identifyConductorFiles.mockReturnValue(conductorFiles);
 
-    mockedFetchRepositoryFile.mockImplementation(async (owner, repo, path) => {
+    mockedGithub.fetchRepositoryFile.mockImplementation(async (owner, repo, path) => {
       if (path.endsWith('setup_state.json')) return '{}';
       if (path.endsWith('tracks.md')) return '# Tracks';
       if (path.endsWith('plan.md')) return '# Plan';
       return '';
     });
+
+    mockedGithub.fetchRecentCommits.mockResolvedValue([]);
     
-    mockedParseSetupState.mockReturnValue('parsed setup state');
-    mockedParseTracksMd.mockReturnValue('parsed tracks');
-    mockedParsePlanMd.mockReturnValue('parsed plan');
+    mockedConductorParser.parseSetupState.mockReturnValue('parsed setup state');
+    mockedConductorParser.parseTracksMd.mockReturnValue('parsed tracks' as any);
+    mockedConductorParser.parsePlanMd.mockReturnValue('parsed plan' as any);
 
     const res = await request(app)
       .post('/api/v1/verify-phase-2')
@@ -78,19 +89,19 @@ describe('POST /api/v1/verify-phase-2', () => {
 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toEqual({
+      commits: [],
       setupState: 'parsed setup state',
       tracks: 'parsed tracks',
       plan: 'parsed plan',
     });
 
-    expect(mockedIdentifyConductorFiles).toHaveBeenCalled();
-    expect(mockedFetchRepositoryFile).toHaveBeenCalledTimes(3);
-    expect(mockedParseSetupState).toHaveBeenCalledWith('{}');
-    expect(mockedParseTracksMd).toHaveBeenCalledWith('# Tracks');
-    expect(mockedParsePlanMd).toHaveBeenCalledWith('# Plan');
+    expect(mockedConductorParser.identifyConductorFiles).toHaveBeenCalled();
+    expect(mockedGithub.fetchRepositoryFile).toHaveBeenCalledTimes(3);
+    expect(mockedConductorParser.parseSetupState).toHaveBeenCalledWith('{}');
+    expect(mockedConductorParser.parseTracksMd).toHaveBeenCalledWith('# Tracks');
+    expect(mockedConductorParser.parsePlanMd).toHaveBeenCalledWith('# Plan');
   });
 });
-
 
 describe('GET /hello', () => {
   it('should return "Hello World!"', async () => {
