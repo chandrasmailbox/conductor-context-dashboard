@@ -76,9 +76,9 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 
 ## Phase 4: Dashboard Assembly & Visualization [checkpoint: TBD]
 
-- [ ] Task: 4.1  Dashboard Layout Assembly
-    *   - [ ] Task: Write Tests for overall dashboard integration
-    *   - [ ] Task: Assemble all UI components (Stage Timeline, Task Table, Progress Bar) into the main dashboard view
+- [x] Task: 4.1  Dashboard Layout Assembly
+    *   - [x] Task: Write Tests for overall dashboard integration (44a6b25)
+    *   - [x] Task: Assemble all UI components (Stage Timeline, Task Table, Progress Bar) into the main dashboard view (44a6b25)
 - [ ] Task: 4.2  Donut Chart Visualization
     *   - [ ] Task: Write Tests for Donut Chart component with Recharts
     *   - [ ] Task: Implement Donut Chart using Recharts to display overall completion percentage
