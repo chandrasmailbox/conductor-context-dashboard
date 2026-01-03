@@ -4,7 +4,7 @@ This plan outlines the steps to implement Local Mode, enabling the dashboard to 
 
 ## Phase 1: Backend Local Support
 
-- [x] Task: 1.1 Local File Service
+- [x] Task: 1.1 Local File Service (556d2dd)
     * - [x] Task: Write Tests for local file reading (handling absolute/relative paths, security checks)
     * - [x] Task: Implement service to read files from the local disk
 - [ ] Task: 1.2 Local Git Service
