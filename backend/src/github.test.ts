@@ -1,14 +1,18 @@
 // backend/src/github.test.ts
-import { fetchRepositoryFile, fetchRepositoryContents } from './github';
+import { jest, describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { fetchRepositoryFile, fetchRepositoryContents } from './github.js';
 import axios from 'axios';
 
 // Mock axios
 jest.mock('axios', () => ({
-  ...jest.requireActual('axios'), // Use actual axios for everything else
-  isAxiosError: jest.fn(), // Mock isAxiosError
-  get: jest.fn(), // Mock get
+  default: {
+    ...jest.requireActual('axios'),
+    get: jest.fn(),
+    isAxiosError: jest.fn(),
+  },
+  isAxiosError: jest.fn(),
 }));
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+const mockedAxios = (await import('axios')).default as jest.Mocked<typeof axios>;
 
 describe('GitHub API Client', () => {
   let consoleErrorSpy: jest.SpyInstance;
