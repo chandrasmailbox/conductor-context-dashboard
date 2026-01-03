@@ -19,7 +19,7 @@ describe('TaskTable', () => {
 
   it('should sort tasks by description', () => {
     render(<TaskTable tasks={tasks} />);
-    const descriptionHeader = screen.getByText(/description/i);
+    const descriptionHeader = screen.getByRole('columnheader', { name: /description/i });
     
     // Default is Description ASC.
     const rowsInitial = screen.getAllByRole('row');
@@ -38,7 +38,7 @@ describe('TaskTable', () => {
 
   it('should sort tasks by status', () => {
     render(<TaskTable tasks={tasks} />);
-    const statusHeader = screen.getByText(/status/i);
+    const statusHeader = screen.getByRole('columnheader', { name: /status/i });
     
     fireEvent.click(statusHeader);
     
@@ -53,5 +53,21 @@ describe('TaskTable', () => {
      render(<TaskTable tasks={[{ id: '1', description: 'Test', status: 'completed' }]} />);
      const badge = screen.getByText('completed');
      expect(badge).toHaveClass('bg-green-100');
+  });
+
+  it('should filter tasks by status', () => {
+    render(<TaskTable tasks={tasks} />);
+    const select = screen.getByRole('combobox', { name: /filter by status/i });
+    
+    fireEvent.change(select, { target: { value: 'completed' } });
+    
+    expect(screen.getByText('Task A')).toBeInTheDocument();
+    expect(screen.queryByText('Task B')).not.toBeInTheDocument();
+    expect(screen.queryByText('Task C')).not.toBeInTheDocument();
+
+    fireEvent.change(select, { target: { value: 'all' } });
+    expect(screen.getByText('Task A')).toBeInTheDocument();
+    expect(screen.getByText('Task B')).toBeInTheDocument();
+    expect(screen.getByText('Task C')).toBeInTheDocument();
   });
 });
