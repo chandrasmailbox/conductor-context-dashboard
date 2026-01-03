@@ -79,9 +79,9 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 - [x] Task: 4.1  Dashboard Layout Assembly
     *   - [x] Task: Write Tests for overall dashboard integration (44a6b25)
     *   - [x] Task: Assemble all UI components (Stage Timeline, Task Table, Progress Bar) into the main dashboard view (44a6b25)
-- [ ] Task: 4.2  Donut Chart Visualization
-    *   - [ ] Task: Write Tests for Donut Chart component with Recharts
-    *   - [ ] Task: Implement Donut Chart using Recharts to display overall completion percentage
+- [x] Task: 4.2  Donut Chart Visualization
+    *   - [x] Task: Write Tests for Donut Chart component with Recharts (b28a0d2)
+    *   - [x] Task: Implement Donut Chart using Recharts to display overall completion percentage (b28a0d2)
 - [ ] Task: 4.3  Recent Activity Panel
     *   - [ ] Task: Write Tests for Recent Activity Panel
     *   - [ ] Task: Implement a panel to display recent commits, extracting data from Git (e.g., commit messages, authors, dates)
