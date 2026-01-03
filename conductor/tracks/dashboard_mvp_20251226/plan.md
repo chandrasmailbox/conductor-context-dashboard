@@ -23,7 +23,7 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 
 ---
 
-## Phase 2: Repository Integration & Conductor Parsing [checkpoint: TBD]
+## Phase 2: Repository Integration & Conductor Parsing [checkpoint: d5fbea9]
 
 - [x] Task: 2.1  GitHub API Integration Setup
     *   - [x] Task: Write Tests for GitHub API client (16c894f)
