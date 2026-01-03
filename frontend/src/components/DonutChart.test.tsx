@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import DonutChart from './DonutChart';
 
-// Mock Recharts because it can be tricky to test in JSDOM
+// Mock Recharts
 vi.mock('recharts', () => ({
   PieChart: ({ children }: any) => <div data-testid="pie-chart">{children}</div>,
   Pie: () => <div data-testid="pie" />,
@@ -19,6 +19,7 @@ describe('DonutChart', () => {
 
   it('should display the progress percentage text', () => {
     render(<DonutChart progress={75} />);
-    expect(screen.getByText('75%')).toBeInTheDocument();
+    expect(screen.getByText('75')).toBeInTheDocument();
+    expect(screen.getByText(/percent/i)).toBeInTheDocument();
   });
 });

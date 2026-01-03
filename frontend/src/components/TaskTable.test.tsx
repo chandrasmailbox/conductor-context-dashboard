@@ -19,7 +19,7 @@ describe('TaskTable', () => {
 
   it('should sort tasks by description', () => {
     render(<TaskTable tasks={tasks} />);
-    const descriptionHeader = screen.getByRole('columnheader', { name: /description/i });
+    const descriptionHeader = screen.getByRole('columnheader', { name: /data description/i });
     
     // Default is Description ASC.
     const rowsInitial = screen.getAllByRole('row');
@@ -38,21 +38,24 @@ describe('TaskTable', () => {
 
   it('should sort tasks by status', () => {
     render(<TaskTable tasks={tasks} />);
-    const statusHeader = screen.getByRole('columnheader', { name: /status/i });
+    const statusHeader = screen.getByRole('columnheader', { name: /status flag/i });
     
     fireEvent.click(statusHeader);
     
     const rows = screen.getAllByRole('row');
     // Alphabetical status: completed, in_progress, pending
-    expect(rows[1]).toHaveTextContent('completed');
-    expect(rows[2]).toHaveTextContent('in_progress');
-    expect(rows[3]).toHaveTextContent('pending');
+    expect(rows[1]).toHaveTextContent(/completed/i);
+    expect(rows[2]).toHaveTextContent(/in_progress/i);
+    expect(rows[3]).toHaveTextContent(/pending/i);
   });
 
   it('should display status badges', () => {
      render(<TaskTable tasks={[{ id: '1', description: 'Test', status: 'completed' }]} />);
-     const badge = screen.getByText('completed');
-     expect(badge).toHaveClass('bg-green-100');
+     // Using querySelector to target the badge specifically or filter by tag
+     const badges = screen.getAllByText(/COMPLETED/i);
+     const badge = badges.find(b => b.tagName === 'SPAN');
+     expect(badge).toBeInTheDocument();
+     expect(badge).toHaveClass('text-emerald-400');
   });
 
   it('should filter tasks by status', () => {

@@ -24,13 +24,13 @@ describe('StageTimeline', () => {
 
   it('should visually indicate completed stages', () => {
       const { container } = render(<StageTimeline stages={[{ id: '1', title: 'Done', status: 'completed' }]} />);
-      const indicator = container.querySelector('.bg-green-500');
+      const indicator = container.querySelector('.text-emerald-400');
       expect(indicator).toBeInTheDocument();
   });
 
    it('should visually indicate in-progress stages', () => {
       const { container } = render(<StageTimeline stages={[{ id: '1', title: 'WIP', status: 'in_progress' }]} />);
-      const indicator = container.querySelector('.bg-blue-500');
+      const indicator = container.querySelector('.text-blue-400');
       expect(indicator).toBeInTheDocument();
   });
 });

@@ -5,8 +5,8 @@ import RecentActivityPanel, { Activity } from './RecentActivityPanel';
 
 describe('RecentActivityPanel', () => {
   const activities: Activity[] = [
-    { id: '1', message: 'feat: Add feature', author: 'User A', date: '2026-01-02T10:00:00Z' },
-    { id: '2', message: 'fix: Bug fix', author: 'User B', date: '2026-01-01T15:00:00Z' },
+    { id: '123456789', message: 'feat: Add feature', author: 'User A', date: '2026-01-02T10:00:00Z' },
+    { id: '987654321', message: 'fix: Bug fix', author: 'User B', date: '2026-01-01T15:00:00Z' },
   ];
 
   it('should render all activities', () => {
@@ -17,8 +17,8 @@ describe('RecentActivityPanel', () => {
     expect(screen.getByText('User B')).toBeInTheDocument();
   });
 
-  it('should display "No recent activity" if list is empty', () => {
+  it('should display "No telemetry data." if list is empty', () => {
     render(<RecentActivityPanel activities={[]} />);
-    expect(screen.getByText(/no recent activity/i)).toBeInTheDocument();
+    expect(screen.getByText(/no telemetry data/i)).toBeInTheDocument();
   });
 });

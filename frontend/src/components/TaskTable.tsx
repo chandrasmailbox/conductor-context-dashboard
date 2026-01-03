@@ -44,63 +44,64 @@ const TaskTable: React.FC<TaskTableProps> = ({ tasks }) => {
   });
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <label htmlFor="status-filter" className="text-sm font-medium text-gray-700">Filter by status:</label>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <label htmlFor="status-filter" className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Filter Status</label>
           <select
             id="status-filter"
             aria-label="Filter by status"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="text-sm border border-gray-300 rounded-md p-1 focus:ring-blue-500 focus:border-blue-500"
+            className="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-md py-1.5 px-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer"
           >
-            <option value="all">All</option>
-            <option value="completed">Completed</option>
-            <option value="in_progress">In Progress</option>
-            <option value="pending">Pending</option>
-            <option value="blocked">Blocked</option>
+            <option value="all">ALL ENTRIES</option>
+            <option value="completed">COMPLETED</option>
+            <option value="in_progress">IN PROGRESS</option>
+            <option value="pending">PENDING</option>
+            <option value="blocked">BLOCKED</option>
           </select>
         </div>
-        <div className="text-sm text-gray-500">
-          Showing {sortedTasks.length} of {tasks.length} tasks
+        <div className="text-[10px] font-mono text-slate-500 bg-slate-800/50 px-2 py-1 rounded">
+          DISPLAYING {sortedTasks.length} / {tasks.length} RECORDS
         </div>
       </div>
-      <div className="overflow-x-auto rounded-lg border border-gray-200">
-        <table className="min-w-full bg-white" role="table">
+      
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-slate-800" role="table">
           <thead>
-            <tr className="bg-gray-100">
+            <tr>
               <th
-                className="px-6 py-3 border-b border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
+                className="px-4 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest cursor-pointer hover:text-slate-300 transition-colors"
                 onClick={() => handleSort('description')}
               >
-                Description {sortField === 'description' && (sortDirection === 'asc' ? '▲' : '▼')}
+                Data Description {sortField === 'description' && (sortDirection === 'asc' ? '↑' : '↓')}
               </th>
               <th
-                className="px-6 py-3 border-b border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer"
+                className="px-4 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest cursor-pointer hover:text-slate-300 transition-colors"
                 onClick={() => handleSort('status')}
               >
-                Status {sortField === 'status' && (sortDirection === 'asc' ? '▲' : '▼')}
+                Status Flag {sortField === 'status' && (sortDirection === 'asc' ? '↑' : '↓')}
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-800/50">
             {sortedTasks.map((task) => (
-              <tr key={task.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap border-b border-gray-200 text-sm text-gray-900">
+              <tr key={task.id} className="hover:bg-slate-800/30 transition-colors group">
+                <td className="px-4 py-4 text-sm text-slate-300 font-medium">
                   {task.description}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap border-b border-gray-200 text-sm">
+                <td className="px-4 py-4 whitespace-nowrap text-sm">
                   <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono tracking-tighter ${
                       task.status === 'completed'
-                        ? 'bg-green-100 text-green-800'
+                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                         : task.status === 'in_progress'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-gray-100 text-gray-800'
+                        ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                        : 'bg-slate-800 text-slate-500 border border-slate-700'
                     }`}
                   >
-                    {task.status}
+                    {task.status.toUpperCase()}
                   </span>
                 </td>
               </tr>
