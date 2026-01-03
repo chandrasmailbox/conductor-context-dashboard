@@ -1,7 +1,10 @@
 import express from 'express';
+import path from 'path';
 import { config } from './config.js';
 import { fetchRepositoryFile, fetchRecentCommits } from './github.js';
 import { parseSetupState, parseTracksMd, parsePlanMd } from './conductor-parser.js';
+import { readLocalFile } from './utils/local-files.js';
+import { fetchLocalCommits } from './utils/local-git.js';
 
 const app = express();
 const port = config.PORT;
@@ -10,6 +13,66 @@ app.use(express.json()); // Add this line to enable JSON body parsing
 
 app.get('/', (req, res) => {
   res.status(200).send('Hello World!');
+});
+
+app.post('/api/v1/sync-local', async (req, res) => {
+  const { directoryPath } = req.body;
+
+  if (!directoryPath) {
+    return res.status(400).json({ error: 'directoryPath is required' });
+  }
+
+  try {
+    // Fetch local commits
+    const commits = await fetchLocalCommits(directoryPath);
+
+    const parsedData: any = {
+      commits: (commits || []).map(c => ({
+        sha: c.sha,
+        message: c.message,
+        author: c.author,
+        date: c.date,
+      }))
+    };
+
+    // 1. Fetch setup_state.json
+    try {
+      const setupStatePath = path.join(directoryPath, 'conductor', 'setup_state.json');
+      const setupStateContent = await readLocalFile(setupStatePath);
+      parsedData.setupState = parseSetupState(setupStateContent);
+    } catch (e) {
+      console.warn('Local setup_state.json not found or invalid', e);
+    }
+
+    // 2. Fetch tracks.md
+    try {
+      const tracksPath = path.join(directoryPath, 'conductor', 'tracks.md');
+      const tracksContent = await readLocalFile(tracksPath);
+      const parsedTracks = parseTracksMd(tracksContent);
+      parsedData.tracks = parsedTracks;
+
+      // 3. Find active track and fetch plan
+      if (parsedTracks && parsedTracks.tracks && parsedTracks.tracks.length > 0) {
+        const activeTrack = parsedTracks.tracks.find(t => t.status === 'in_progress') || parsedTracks.tracks[0];
+
+        if (activeTrack) {
+          // Resolve path: remove leading ./ and trailing /
+          let trackPathRel = activeTrack.link.replace(/^\.\//, '').replace(/\/$/, '');
+          const planPath = path.join(directoryPath, trackPathRel, 'plan.md');
+          
+          const planContent = await readLocalFile(planPath);
+          parsedData.plan = parsePlanMd(planContent);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to fetch local tracks or plan:', e);
+    }
+
+    res.status(200).json(parsedData);
+  } catch (error) {
+    console.error('Error in /api/v1/sync-local:', error);
+    res.status(500).json({ error: 'Failed to process local directory' });
+  }
 });
 
 app.post('/api/v1/verify-phase-2', async (req, res) => {
