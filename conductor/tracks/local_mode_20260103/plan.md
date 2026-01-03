@@ -19,7 +19,7 @@ This plan outlines the steps to implement Local Mode, enabling the dashboard to 
 
 ## Phase 2: Frontend Integration
 
-- [x] Task: 2.1 Mode Toggle Component
+- [x] Task: 2.1 Mode Toggle Component (67ba945)
     * - [x] Task: Write Tests for the mode toggle (GitHub vs Local)
     * - [x] Task: Implement a UI component to switch between modes
 - [ ] Task: 2.2 Local Sync Logic
