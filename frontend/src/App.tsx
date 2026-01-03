@@ -33,21 +33,27 @@ function App() {
   const [repoUrl, setRepoUrl] = useState('');
   const [syncData, setSyncData] = useState<SyncData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
 
   const handleSync = async () => {
     if (!repoUrl) return;
     setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch('/api/v1/verify-phase-2', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ repoUrl }),
       });
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}`);
+      }
       const data = await response.json();
       setSyncData(data);
     } catch (error) {
       console.error('Error syncing data:', error);
+      setError('Failed to sync repository data. Please verify the URL and ensure the repository is public and contains Conductor artifacts.');
     } finally {
       setIsLoading(false);
     }
@@ -67,8 +73,7 @@ function App() {
       description: task.description,
       status: task.status as any
     }))
-  )
-   || [];
+  ) || [];
 
   const activities: Activity[] = syncData?.commits?.map(c => ({
     id: c.sha,
@@ -115,6 +120,13 @@ function App() {
       </header>
 
       <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8" role="main">
+        {error && (
+          <div className="mb-8 p-4 bg-brand-bg-overlay border border-brand-primary/30 rounded-lg flex items-center gap-3 text-brand-primary animate-in slide-in-from-top-4 duration-300">
+            <span className="text-xl">⚠️</span>
+            <div className="flex-1 text-sm font-semibold">{error}</div>
+            <button onClick={() => setError(null)} className="text-brand-text-muted hover:text-brand-text-primary">✕</button>
+          </div>
+        )}
         {!syncData ? (
           <div className="text-center py-24 border-2 border-dashed border-brand-border rounded-2xl">
             <div className="text-6xl mb-4">🚀</div>

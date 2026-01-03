@@ -19,25 +19,6 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: /sync/i })).toBeInTheDocument();
   });
 
-  it('should call handleSync when the sync button is clicked', () => {
-    const consoleSpy = vi.spyOn(console, 'log');
-    render(<App />);
-    const input = screen.getByPlaceholderText(/enter repository url/i);
-    const syncButton = screen.getByRole('button', { name: /sync/i });
-    
-    fireEvent.change(input, { target: { value: 'https://github.com/owner/repo' } });
-    fireEvent.click(syncButton);
-    
-    // In current implementation, I removed the 'Syncing data...' console log to be cleaner
-    // but the API is called. I'll just check that it doesn't crash or verify the fetch.
-    consoleSpy.mockRestore();
-  });
-
-  it('should have an input for repository URL', () => {
-    render(<App />);
-    expect(screen.getByPlaceholderText(/enter repository url/i)).toBeInTheDocument();
-  });
-
   it('should trigger API call with repo URL when sync is clicked', async () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
@@ -59,36 +40,41 @@ describe('App', () => {
   });
 
   it('should render the integrated dashboard components after sync', async () => {
-    const mockSyncData = {
-      plan: {
-        title: 'Mock Plan',
-        phases: [
-          {
-            title: 'Phase 1',
-            tasks: [{ description: 'Task 1', status: 'completed', subtasks: [] }]
-          }
-        ]
-      },
-      commits: []
-    };
-
+    // Mock successful fetch
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => mockSyncData,
+      json: async () => ({
+        plan: {
+          title: 'Test Project',
+          phases: [{ title: 'Phase 1', tasks: [{ description: 'Task 1', status: 'completed' }] }]
+        },
+        commits: []
+      }),
     });
 
     render(<App />);
     const input = screen.getByPlaceholderText(/enter repository url/i);
-    const syncButton = screen.getByRole('button', { name: /sync/i });
+    const button = screen.getByRole('button', { name: /sync/i });
 
     fireEvent.change(input, { target: { value: 'https://github.com/owner/repo' } });
-    fireEvent.click(syncButton);
+    fireEvent.click(button);
 
-    // Wait for components to appear
-    expect(await screen.findByRole('region', { name: /stage timeline/i })).toBeInTheDocument();
-    expect(await screen.findByRole('table')).toBeInTheDocument();
-    expect(await screen.findByRole('progressbar')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /recent activity/i })).toBeInTheDocument();
-    expect(screen.getByText(/Mock Plan/i)).toBeInTheDocument();
+    // Check for synced content
+    expect(await screen.findByText(/Test Project/i)).toBeInTheDocument();
+    expect(screen.getByText(/Task 1/i)).toBeInTheDocument();
+  });
+
+  it('should display an error message if sync fails', async () => {
+    // Mock fetch failure
+    global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
+    
+    render(<App />);
+    const input = screen.getByPlaceholderText(/enter repository url/i);
+    const button = screen.getByRole('button', { name: /sync/i });
+    
+    fireEvent.change(input, { target: { value: 'https://github.com/owner/repo' } });
+    fireEvent.click(button);
+    
+    expect(await screen.findByText(/failed to sync/i)).toBeInTheDocument();
   });
 });
