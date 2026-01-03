@@ -3,6 +3,7 @@ import './App.css'
 import StageTimeline, { Stage } from './components/StageTimeline';
 import TaskTable, { Task } from './components/TaskTable';
 import ProgressBar from './components/ProgressBar';
+import DonutChart from './components/DonutChart';
 
 interface SyncData {
   setupState?: string;
@@ -105,7 +106,22 @@ function App() {
           <div className="space-y-6">
             <section className="bg-white p-6 rounded-lg shadow">
               <h2 className="text-xl font-semibold mb-4">Project Overview: {syncData.plan?.title}</h2>
-              <ProgressBar progress={progress} label="Overall Completion" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <DonutChart progress={progress} />
+                <div className="space-y-4">
+                  <ProgressBar progress={progress} label="Overall Completion" />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 bg-blue-50 rounded-lg">
+                      <div className="text-sm text-blue-600 font-medium">Completed Tasks</div>
+                      <div className="text-2xl font-bold text-blue-900">{completedCount} / {allTasks.length}</div>
+                    </div>
+                    <div className="p-4 bg-green-50 rounded-lg">
+                      <div className="text-sm text-green-600 font-medium">Status</div>
+                      <div className="text-2xl font-bold text-green-900">{progress === 100 ? 'Done' : 'In Progress'}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </section>
 
             <section className="bg-white p-6 rounded-lg shadow">
