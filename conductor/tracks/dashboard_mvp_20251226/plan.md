@@ -61,9 +61,9 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 - [x] Task: 3.3  Status Tracking Logic
     *   - [x] Task: Write Tests for status tracking (Completed, In Progress, Pending, Blocked) (782add7)
     *   - [x] Task: Implement backend logic to derive and assign statuses based on plan.md parsing (782add7)
-- [ ] Task: 3.4  Reusable UI Components - Stage Timeline
-    *   - [ ] Task: Write Tests for Stage Timeline component
-    *   - [ ] Task: Implement React component for the Stage Timeline (stepper view)
+- [x] Task: 3.4  Reusable UI Components - Stage Timeline
+    *   - [x] Task: Write Tests for Stage Timeline component (e4f4ce8)
+    *   - [x] Task: Implement React component for the Stage Timeline (stepper view) (e4f4ce8)
 - [ ] Task: 3.5  Reusable UI Components - Task Table
     *   - [ ] Task: Write Tests for Task Table component
     *   - [ ] Task: Implement React component for the Task Table with sortable columns and status indicators
