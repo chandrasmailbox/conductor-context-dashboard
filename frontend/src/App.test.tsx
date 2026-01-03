@@ -22,8 +22,12 @@ describe('App', () => {
   it('should call handleSync when the sync button is clicked', () => {
     const consoleSpy = vi.spyOn(console, 'log');
     render(<App />);
+    const input = screen.getByPlaceholderText(/repository url/i);
     const syncButton = screen.getByRole('button', { name: /sync/i });
+    
+    fireEvent.change(input, { target: { value: 'https://github.com/owner/repo' } });
     fireEvent.click(syncButton);
+    
     expect(consoleSpy).toHaveBeenCalledWith('Syncing data...');
     consoleSpy.mockRestore();
   });
@@ -51,6 +55,38 @@ describe('App', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ repoUrl: 'https://github.com/owner/repo' }),
     }));
+  });
+
+  it('should render the integrated dashboard components after sync', async () => {
+    const mockSyncData = {
+      plan: {
+        title: 'Mock Plan',
+        phases: [
+          {
+            title: 'Phase 1',
+            tasks: [{ description: 'Task 1', status: 'completed', subtasks: [] }]
+          }
+        ]
+      }
+    };
+
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => mockSyncData,
+    });
+
+    render(<App />);
+    const input = screen.getByPlaceholderText(/repository url/i);
+    const syncButton = screen.getByRole('button', { name: /sync/i });
+
+    fireEvent.change(input, { target: { value: 'https://github.com/owner/repo' } });
+    fireEvent.click(syncButton);
+
+    // Wait for components to appear
+    expect(await screen.findByRole('region', { name: /stage timeline/i })).toBeInTheDocument();
+    expect(await screen.findByRole('table')).toBeInTheDocument();
+    expect(await screen.findByRole('progressbar')).toBeInTheDocument();
+    expect(screen.getByText(/Mock Plan/i)).toBeInTheDocument();
   });
 });
 
