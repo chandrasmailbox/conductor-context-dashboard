@@ -9,12 +9,13 @@ import DonutChart from './components/DonutChart';
 import RecentActivityPanel from './components/RecentActivityPanel';
 import type { Activity } from './components/RecentActivityPanel';
 import ThemeSelector from './components/ThemeSelector';
+import ModeToggle from './components/ModeToggle';
 import { useTheme } from './hooks/useTheme';
 
 interface SyncData {
   setupState?: string;
   commits?: { sha: string; message: string; author: string; date: string }[];
-  tracks?: { tracks: { title: string; link: string }[] };
+  tracks?: { tracks: { title: string; link: string; status: string }[] };
   plan?: {
     title: string;
     phases: {
@@ -31,6 +32,7 @@ interface SyncData {
 
 function App() {
   const [repoUrl, setRepoUrl] = useState('');
+  const [syncMode, setSyncMode] = useState<'github' | 'local'>('github');
   const [syncData, setSyncData] = useState<SyncData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,10 +43,13 @@ function App() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/v1/verify-phase-2', {
+      const endpoint = syncMode === 'github' ? '/api/v1/verify-phase-2' : '/api/v1/sync-local';
+      const body = syncMode === 'github' ? { repoUrl } : { directoryPath: repoUrl };
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ repoUrl }),
+        body: JSON.stringify(body),
       });
       if (!response.ok) {
         throw new Error(`Server returned ${response.status}`);
@@ -53,10 +58,17 @@ function App() {
       setSyncData(data);
     } catch (error) {
       console.error('Error syncing data:', error);
-      setError('Failed to sync repository data. Please verify the URL and ensure the repository is public and contains Conductor artifacts.');
+      setError(`Failed to sync ${syncMode === 'github' ? 'repository' : 'local'} data. Please verify the ${syncMode === 'github' ? 'URL' : 'path'} and ensure the project contains Conductor artifacts.`);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleModeChange = (mode: 'github' | 'local') => {
+    setSyncMode(mode);
+    setRepoUrl('');
+    setSyncData(null);
+    setError(null);
   };
 
   const stages: Stage[] = syncData?.plan?.phases.map((phase, index) => ({
@@ -89,16 +101,19 @@ function App() {
     <div className="min-h-screen bg-brand-bg-base text-brand-text-primary font-sans transition-colors duration-300">
       <header className="bg-brand-bg-surface border-b border-brand-border sticky top-0 z-10" role="banner" aria-label="Dashboard Header">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-brand-secondary rounded flex items-center justify-center font-bold text-white shadow-lg shadow-brand-primary/20">C</div>
-            <h1 className="text-xl font-bold tracking-tight uppercase">
-              Conductor <span className="text-brand-primary">Dashboard</span>
-            </h1>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-brand-secondary rounded flex items-center justify-center font-bold text-white shadow-lg shadow-brand-primary/20">C</div>
+              <h1 className="text-xl font-bold tracking-tight uppercase">
+                Conductor <span className="text-brand-primary">Dashboard</span>
+              </h1>
+            </div>
+            <ModeToggle mode={syncMode} onModeChange={handleModeChange} />
           </div>
           <div className="flex gap-2">
             <input
               type="text"
-              placeholder="Enter Repository URL..."
+              placeholder={syncMode === 'github' ? "Enter Repository URL..." : "Enter Local Directory Path..."}
               value={repoUrl}
               onChange={(e) => setRepoUrl(e.target.value)}
               className="px-4 py-2 bg-brand-bg-overlay border border-brand-border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary w-full md:w-96 text-sm text-brand-text-secondary placeholder-brand-text-muted"
@@ -132,7 +147,9 @@ function App() {
             <div className="text-6xl mb-4">🚀</div>
             <h2 className="text-2xl font-bold text-brand-text-secondary">Ready for Launch</h2>
             <p className="text-brand-text-muted mt-2 max-w-md mx-auto">
-              Enter a public GitHub repository URL above to visualize project progress and activity.
+              {syncMode === 'github' 
+                ? "Enter a public GitHub repository URL above to visualize project progress and activity."
+                : "Enter a local directory path above to visualize your local development progress."}
             </p>
           </div>
         ) : (

@@ -22,9 +22,9 @@ This plan outlines the steps to implement Local Mode, enabling the dashboard to 
 - [x] Task: 2.1 Mode Toggle Component (67ba945)
     * - [x] Task: Write Tests for the mode toggle (GitHub vs Local)
     * - [x] Task: Implement a UI component to switch between modes
-- [ ] Task: 2.2 Local Sync Logic
-    * - [ ] Task: Write Tests for frontend local sync triggering
-    * - [ ] Task: Update App.tsx to handle local sync requests and state
+- [x] Task: 2.2 Local Sync Logic
+    * - [x] Task: Write Tests for frontend local sync triggering
+    * - [x] Task: Update App.tsx to handle local sync requests and state
 - [ ] Task: 2.3 Path Selection Enhancements
     * - [ ] Task: Write Tests for path input validation
     * - [ ] Task: Improve UI to handle local directory paths effectively
