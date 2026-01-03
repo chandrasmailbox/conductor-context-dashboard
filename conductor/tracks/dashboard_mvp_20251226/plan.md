@@ -64,9 +64,9 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 - [x] Task: 3.4  Reusable UI Components - Stage Timeline
     *   - [x] Task: Write Tests for Stage Timeline component (e4f4ce8)
     *   - [x] Task: Implement React component for the Stage Timeline (stepper view) (e4f4ce8)
-- [ ] Task: 3.5  Reusable UI Components - Task Table
-    *   - [ ] Task: Write Tests for Task Table component
-    *   - [ ] Task: Implement React component for the Task Table with sortable columns and status indicators
+- [x] Task: 3.5  Reusable UI Components - Task Table
+    *   - [x] Task: Write Tests for Task Table component (1ac9050)
+    *   - [x] Task: Implement React component for the Task Table with sortable columns and status indicators (1ac9050)
 - [ ] Task: 3.6  Reusable UI Components - Progress Bar
     *   - [ ] Task: Write Tests for Progress Bar component
     *   - [ ] Task: Implement React component for a customizable progress bar
