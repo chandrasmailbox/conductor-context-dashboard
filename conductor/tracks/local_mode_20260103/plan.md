@@ -25,7 +25,7 @@ This plan outlines the steps to implement Local Mode, enabling the dashboard to 
 - [x] Task: 2.2 Local Sync Logic (2cdc872)
     * - [x] Task: Write Tests for frontend local sync triggering
     * - [x] Task: Update App.tsx to handle local sync requests and state
-- [x] Task: 2.3 Path Selection Enhancements
+- [x] Task: 2.3 Path Selection Enhancements (78cfbd7)
     * - [x] Task: Write Tests for path input validation
     * - [x] Task: Improve UI to handle local directory paths effectively
 - [ ] Task:  Conductor - User Manual Verification 'Phase 2: Frontend Integration'
