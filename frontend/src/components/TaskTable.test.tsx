@@ -1,7 +1,8 @@
 // frontend/src/components/TaskTable.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import TaskTable, { Task } from './TaskTable';
+import TaskTable from './TaskTable';
+import type { Task } from './TaskTable';
 
 describe('TaskTable', () => {
   const tasks: Task[] = [

@@ -1,7 +1,8 @@
 // frontend/src/components/StageTimeline.test.tsx
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import StageTimeline, { Stage } from './StageTimeline';
+import StageTimeline from './StageTimeline';
+import type { Stage } from './StageTimeline';
 
 describe('StageTimeline', () => {
   const stages: Stage[] = [

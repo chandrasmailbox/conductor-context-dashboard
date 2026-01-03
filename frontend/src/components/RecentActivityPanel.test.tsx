@@ -1,7 +1,8 @@
 // frontend/src/components/RecentActivityPanel.test.tsx
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import RecentActivityPanel, { Activity } from './RecentActivityPanel';
+import RecentActivityPanel from './RecentActivityPanel';
+import type { Activity } from './RecentActivityPanel';
 
 describe('RecentActivityPanel', () => {
   const activities: Activity[] = [
