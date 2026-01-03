@@ -67,9 +67,9 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 - [x] Task: 3.5  Reusable UI Components - Task Table
     *   - [x] Task: Write Tests for Task Table component (1ac9050)
     *   - [x] Task: Implement React component for the Task Table with sortable columns and status indicators (1ac9050)
-- [ ] Task: 3.6  Reusable UI Components - Progress Bar
-    *   - [ ] Task: Write Tests for Progress Bar component
-    *   - [ ] Task: Implement React component for a customizable progress bar
+- [x] Task: 3.6  Reusable UI Components - Progress Bar
+    *   - [x] Task: Write Tests for Progress Bar component (b4a20c6)
+    *   - [x] Task: Implement React component for a customizable progress bar (b4a20c6)
 - [ ] Task:  Conductor - User Manual Verification 'Phase 3: Progress Model & UI Components' (Protocol in workflow.md)
 
 ---
