@@ -55,9 +55,9 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 - [x] Task: 3.1  Progress Data Model Definition
     *   - [x] Task: Write Tests for progress data model (Stages, Tasks, Statuses) (eb7f0ea)
     *   - [x] Task: Implement backend data structures for normalized progress schema (eb7f0ea)
-- [ ] Task: 3.2  Completion Percentage Calculation
-    *   - [ ] Task: Write Tests for completion calculation logic
-    *   - [ ] Task: Implement backend logic to calculate completion percentages for tasks, stages, and overall project
+- [x] Task: 3.2  Completion Percentage Calculation
+    *   - [x] Task: Write Tests for completion calculation logic (f76b65f)
+    *   - [x] Task: Implement backend logic to calculate completion percentages for tasks, stages, and overall project (f76b65f)
 - [ ] Task: 3.3  Status Tracking Logic
     *   - [ ] Task: Write Tests for status tracking (Completed, In Progress, Pending, Blocked)
     *   - [ ] Task: Implement backend logic to derive and assign statuses based on plan.md parsing
