@@ -52,9 +52,9 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 
 ## Phase 3: Progress Model & UI Components [checkpoint: TBD]
 
-- [ ] Task: 3.1  Progress Data Model Definition
-    *   - [ ] Task: Write Tests for progress data model (Stages, Tasks, Statuses)
-    *   - [ ] Task: Implement backend data structures for normalized progress schema
+- [x] Task: 3.1  Progress Data Model Definition
+    *   - [x] Task: Write Tests for progress data model (Stages, Tasks, Statuses) (eb7f0ea)
+    *   - [x] Task: Implement backend data structures for normalized progress schema (eb7f0ea)
 - [ ] Task: 3.2  Completion Percentage Calculation
     *   - [ ] Task: Write Tests for completion calculation logic
     *   - [ ] Task: Implement backend logic to calculate completion percentages for tasks, stages, and overall project
