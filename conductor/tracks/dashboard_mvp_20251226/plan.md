@@ -85,9 +85,9 @@ This plan outlines the steps to implement the core Progress Visualization Dashbo
 - [x] Task: 4.3  Recent Activity Panel
     *   - [x] Task: Write Tests for Recent Activity Panel (41de6ae)
     *   - [x] Task: Implement a panel to display recent commits, extracting data from Git (e.g., commit messages, authors, dates) (41de6ae)
-- [ ] Task: 4.4  Filtering Functionality
-    *   - [ ] Task: Write Tests for filter logic by status and phase
-    *   - [ ] Task: Implement frontend filtering capabilities for task table by status and phase
+- [x] Task: 4.4  Filtering Functionality
+    *   - [x] Task: Write Tests for filter logic by status and phase (c4361c2)
+    *   - [x] Task: Implement frontend filtering capabilities for task table by status and phase (c4361c2)
 - [ ] Task: 4.5  Apply Control Room Aesthetic
     *   - [ ] Task: Write Tests for theme application (visual checks)
     *   - [ ] Task: Ensure the dark theme with high contrast and minimalist layout is consistently applied across the dashboard
