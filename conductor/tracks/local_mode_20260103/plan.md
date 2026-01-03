@@ -7,7 +7,7 @@ This plan outlines the steps to implement Local Mode, enabling the dashboard to 
 - [x] Task: 1.1 Local File Service (556d2dd)
     * - [x] Task: Write Tests for local file reading (handling absolute/relative paths, security checks)
     * - [x] Task: Implement service to read files from the local disk
-- [x] Task: 1.2 Local Git Service
+- [x] Task: 1.2 Local Git Service (f284f95)
     * - [x] Task: Write Tests for fetching local git commits via shell commands
     * - [x] Task: Implement service to extract commit history from a local repository
 - [ ] Task: 1.3 Local Sync Endpoint
