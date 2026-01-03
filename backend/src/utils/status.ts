@@ -1,5 +1,5 @@
 // backend/src/utils/status.ts
-import type { SubTask, Status } from '../models/progress.js';
+import type { Status } from '../models/progress.js';
 
 export const deriveStatus = (subtasks: { status: string }[]): Status => {
   if (subtasks.length === 0) {

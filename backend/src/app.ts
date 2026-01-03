@@ -1,7 +1,7 @@
 import express from 'express';
 import { config } from './config.js';
-import { fetchRepositoryContents, fetchRepositoryFile, fetchRecentCommits } from './github.js';
-import { identifyConductorFiles, parseSetupState, parseTracksMd, parsePlanMd } from './conductor-parser.js';
+import { fetchRepositoryFile, fetchRecentCommits } from './github.js';
+import { parseSetupState, parseTracksMd, parsePlanMd } from './conductor-parser.js';
 
 const app = express();
 const port = config.PORT;
@@ -32,12 +32,11 @@ app.post('/api/v1/verify-phase-2', async (req, res) => {
       return res.status(400).json({ error: 'Invalid repoUrl format' });
     }
 
-    const contents = await fetchRepositoryContents(owner, repo);
-    const conductorFiles = identifyConductorFiles(contents);
+    // Fetch commits
     const commits = await fetchRecentCommits(owner, repo);
 
     const parsedData: any = {
-      commits: commits.map(c => ({
+      commits: (commits || []).map(c => ({
         sha: c.sha,
         message: c.commit.message,
         author: c.commit.author.name,
@@ -45,15 +44,39 @@ app.post('/api/v1/verify-phase-2', async (req, res) => {
       }))
     };
 
-    for (const file of conductorFiles) {
-      const content = await fetchRepositoryFile(owner, repo, file.path);
-      if (file.name === 'setup_state.json') {
-        parsedData.setupState = parseSetupState(content);
-      } else if (file.name === 'tracks.md') {
-        parsedData.tracks = parseTracksMd(content);
-      } else if (file.name === 'plan.md') {
-        parsedData.plan = parsePlanMd(content);
+    // 1. Fetch setup_state.json (optional but recommended)
+    try {
+      const setupStateContent = await fetchRepositoryFile(owner, repo, 'conductor/setup_state.json');
+      parsedData.setupState = parseSetupState(setupStateContent);
+    } catch (e) {
+      console.warn('setup_state.json not found or invalid', e);
+    }
+
+    // 2. Fetch tracks.md
+    try {
+      const tracksContent = await fetchRepositoryFile(owner, repo, 'conductor/tracks.md');
+      const parsedTracks = parseTracksMd(tracksContent);
+      parsedData.tracks = parsedTracks;
+
+      // 3. Find active track and fetch plan
+      // Prioritize 'in_progress', otherwise take the first one
+      if (parsedTracks && parsedTracks.tracks && parsedTracks.tracks.length > 0) {
+        const activeTrack = parsedTracks.tracks.find(t => t.status === 'in_progress') || parsedTracks.tracks[0];
+
+        if (activeTrack) {
+          // Resolve path: remove leading ./ and trailing /
+          let trackPath = activeTrack.link.replace(/^\.\//, '').replace(/\/$/, '');
+          
+          // Append plan.md
+          const planPath = `${trackPath}/plan.md`;
+          
+          const planContent = await fetchRepositoryFile(owner, repo, planPath);
+          parsedData.plan = parsePlanMd(planContent);
+        }
       }
+    } catch (e) {
+      console.error('Failed to fetch tracks or plan:', e);
+      // We might still return what we have (commits)
     }
 
     res.status(200).json(parsedData);

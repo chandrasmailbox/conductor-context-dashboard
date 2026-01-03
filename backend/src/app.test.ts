@@ -52,7 +52,7 @@ describe('POST /api/v1/verify-phase-2', () => {
   });
 
   it('should return 500 if there is an error processing the repository', async () => {
-    mockedGithub.fetchRepositoryContents.mockImplementationOnce(() => Promise.reject(new Error('Failed to fetch')));
+    mockedGithub.fetchRecentCommits.mockImplementationOnce(() => Promise.reject(new Error('Failed to fetch')));
 
     const res = await request(app)
       .post('/api/v1/verify-phase-2')
@@ -63,13 +63,6 @@ describe('POST /api/v1/verify-phase-2', () => {
   });
 
   it('should return parsed data for a valid repoUrl', async () => {
-    const conductorFiles = [
-      { name: 'setup_state.json', path: 'conductor/setup_state.json', type: 'file' as const },
-      { name: 'tracks.md', path: 'conductor/tracks.md', type: 'file' as const },
-      { name: 'plan.md', path: 'conductor/tracks/some-track/plan.md', type: 'file' as const },
-    ];
-    mockedConductorParser.identifyConductorFiles.mockReturnValue(conductorFiles);
-
     mockedGithub.fetchRepositoryFile.mockImplementation(async (owner, repo, path) => {
       if (path.endsWith('setup_state.json')) return '{}';
       if (path.endsWith('tracks.md')) return '# Tracks';
@@ -77,10 +70,22 @@ describe('POST /api/v1/verify-phase-2', () => {
       return '';
     });
 
-    mockedGithub.fetchRecentCommits.mockResolvedValue([]);
+    mockedGithub.fetchRecentCommits.mockResolvedValue([
+      {
+        sha: 'sha1',
+        commit: {
+          author: { name: 'Author', date: '2026-01-01' },
+          message: 'Message'
+        }
+      }
+    ]);
     
     mockedConductorParser.parseSetupState.mockReturnValue('parsed setup state');
-    mockedConductorParser.parseTracksMd.mockReturnValue('parsed tracks' as any);
+    mockedConductorParser.parseTracksMd.mockReturnValue({
+      tracks: [
+        { title: 'Track 1', link: './conductor/tracks/some-track/', status: 'in_progress' }
+      ]
+    });
     mockedConductorParser.parsePlanMd.mockReturnValue('parsed plan' as any);
 
     const res = await request(app)
@@ -89,13 +94,18 @@ describe('POST /api/v1/verify-phase-2', () => {
 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toEqual({
-      commits: [],
+      commits: [
+        { sha: 'sha1', message: 'Message', author: 'Author', date: '2026-01-01' }
+      ],
       setupState: 'parsed setup state',
-      tracks: 'parsed tracks',
+      tracks: {
+        tracks: [
+          { title: 'Track 1', link: './conductor/tracks/some-track/', status: 'in_progress' }
+        ]
+      },
       plan: 'parsed plan',
     });
 
-    expect(mockedConductorParser.identifyConductorFiles).toHaveBeenCalled();
     expect(mockedGithub.fetchRepositoryFile).toHaveBeenCalledTimes(3);
     expect(mockedConductorParser.parseSetupState).toHaveBeenCalledWith('{}');
     expect(mockedConductorParser.parseTracksMd).toHaveBeenCalledWith('# Tracks');

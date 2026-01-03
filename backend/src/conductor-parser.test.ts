@@ -78,7 +78,8 @@ describe('parseTracksMd', () => {
       tracks: [
         {
           title: 'Implement the core Progress Visualization Dashboard',
-          link: './conductor/tracks/dashboard_mvp_20251226/'
+          link: './conductor/tracks/dashboard_mvp_20251226/',
+          status: 'in_progress'
         }
       ]
     };
@@ -105,11 +106,13 @@ This file tracks all major tracks for the project. Each track has its own detail
       tracks: [
         {
           title: 'Implement the core Progress Visualization Dashboard, including repository integration, Conductor artifact parsing, responsive UI with Control Room aesthetic, key visualizations, and theme switching.',
-          link: './conductor/tracks/dashboard_mvp_20251226/'
+          link: './conductor/tracks/dashboard_mvp_20251226/',
+          status: 'in_progress'
         },
         {
           title: 'Another Track Example',
-          link: './conductor/tracks/another_track/'
+          link: './conductor/tracks/another_track/',
+          status: 'pending'
         }
       ]
     };
@@ -149,7 +152,8 @@ Link: [./conductor/tracks/malformed2/]
       tracks: [
         {
           title: 'Valid Track',
-          link: './conductor/tracks/valid_track/'
+          link: './conductor/tracks/valid_track/',
+          status: 'in_progress'
         }
       ]
     };
@@ -293,6 +297,13 @@ describe('parsePlanMd', () => {
         {
           title: 'Phase 1: Broken Tasks',
           tasks: [
+            {
+              description: 'Malformed Task 1',
+              status: 'completed',
+              subtasks: [
+                { description: 'Malformed Subtask', status: 'completed' }
+              ]
+            },
             {
               description: 'Task: Valid Task',
               status: 'pending',

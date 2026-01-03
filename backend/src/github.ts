@@ -18,7 +18,7 @@ export interface GitHubCommit {
     };
 }
 
-const handleGitHubError = (error: unknown, context: string) => {
+const handleGitHubError = (error: unknown, context: string): never => {
     if (axios.isAxiosError(error)) {
         console.error(`Error ${context} from GitHub: ${error.message}`);
         if (error.response) {
@@ -42,7 +42,7 @@ export const fetchRepositoryFile = async (owner: string, repo: string, path: str
         );
         return response.data;
     } catch (error) {
-        handleGitHubError(error, 'fetching file');
+        return handleGitHubError(error, 'fetching file');
     }
 };
 
@@ -58,7 +58,7 @@ export const fetchRepositoryContents = async (owner: string, repo: string, path:
         );
         return response.data;
     } catch (error) {
-        handleGitHubError(error, 'fetching directory contents');
+        return handleGitHubError(error, 'fetching directory contents');
     }
 };
 
@@ -77,6 +77,6 @@ export const fetchRecentCommits = async (owner: string, repo: string, perPage: n
         );
         return response.data;
     } catch (error) {
-        handleGitHubError(error, 'fetching commits');
+        return handleGitHubError(error, 'fetching commits');
     }
 };

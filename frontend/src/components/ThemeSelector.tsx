@@ -1,5 +1,5 @@
 import React from 'react';
-import { Theme, themes } from '../hooks/useTheme';
+import { type Theme, themes } from '../hooks/useTheme';
 
 interface ThemeSelectorProps {
   currentTheme: Theme;
