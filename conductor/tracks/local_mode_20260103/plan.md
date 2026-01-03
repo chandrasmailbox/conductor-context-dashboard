@@ -2,7 +2,7 @@
 
 This plan outlines the steps to implement Local Mode, enabling the dashboard to read data from the local filesystem.
 
-## Phase 1: Backend Local Support
+## Phase 1: Backend Local Support [checkpoint: 3f28fa9]
 
 - [x] Task: 1.1 Local File Service (556d2dd)
     * - [x] Task: Write Tests for local file reading (handling absolute/relative paths, security checks)
@@ -13,15 +13,15 @@ This plan outlines the steps to implement Local Mode, enabling the dashboard to 
 - [x] Task: 1.3 Local Sync Endpoint (7ae996e)
     * - [x] Task: Write Tests for `POST /api/v1/sync-local`
     * - [x] Task: Implement the local sync endpoint to coordinate file reading and parsing
-- [ ] Task:  Conductor - User Manual Verification 'Phase 1: Backend Local Support'
+- [x] Task:  Conductor - User Manual Verification 'Phase 1: Backend Local Support' (3f28fa9)
 
 ---
 
 ## Phase 2: Frontend Integration
 
-- [ ] Task: 2.1 Mode Toggle Component
-    * - [ ] Task: Write Tests for the mode toggle (GitHub vs Local)
-    * - [ ] Task: Implement a UI component to switch between modes
+- [x] Task: 2.1 Mode Toggle Component
+    * - [x] Task: Write Tests for the mode toggle (GitHub vs Local)
+    * - [x] Task: Implement a UI component to switch between modes
 - [ ] Task: 2.2 Local Sync Logic
     * - [ ] Task: Write Tests for frontend local sync triggering
     * - [ ] Task: Update App.tsx to handle local sync requests and state
