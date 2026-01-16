@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from "framer-motion";
+import { Toaster } from "sonner";
 import './App.css'
+import Header from './components/Header';
+import RepoInput from './components/RepoInput';
+import ProgressOverview from './components/ProgressOverview';
+import CompletionChart from './components/CompletionChart';
 import StageTimeline from './components/StageTimeline';
-import type { Stage } from './components/StageTimeline';
+import type { Phase } from './components/StageTimeline';
 import TaskTable from './components/TaskTable';
 import type { Task } from './components/TaskTable';
-import ProgressBar from './components/ProgressBar';
-import DonutChart from './components/DonutChart';
 import RecentActivityPanel from './components/RecentActivityPanel';
 import type { Activity } from './components/RecentActivityPanel';
-import ThemeSelector from './components/ThemeSelector';
-import ModeToggle from './components/ModeToggle';
 import { useTheme } from './hooks/useTheme';
 
 interface SyncData {
@@ -28,6 +30,9 @@ interface SyncData {
       checkpoint?: string;
     }[];
   };
+  product_name?: string;
+  owner?: string;
+  repo_name?: string;
 }
 
 function App() {
@@ -46,13 +51,15 @@ function App() {
     localStorage.setItem('syncMode', syncMode);
   }, [syncMode]);
 
-  const handleSync = async () => {
-    if (!repoUrl) return;
+  const handleSync = async (url?: string) => {
+    const targetUrl = url || repoUrl;
+    if (!targetUrl) return;
+    
     setIsLoading(true);
     setError(null);
     try {
       const endpoint = syncMode === 'github' ? '/api/v1/verify-phase-2' : '/api/v1/sync-local';
-      const body = syncMode === 'github' ? { repoUrl } : { directoryPath: repoUrl };
+      const body = syncMode === 'github' ? { repoUrl: targetUrl } : { directoryPath: targetUrl };
 
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -79,12 +86,22 @@ function App() {
     setError(null);
   };
 
-  const stages: Stage[] = syncData?.plan?.phases.map((phase, index) => ({
-    id: `phase-${index}`,
+  const handleRepoSubmit = (url: string) => {
+    setRepoUrl(url);
+    handleSync(url);
+  };
+
+  const phases: Phase[] = syncData?.plan?.phases.map((phase) => ({
     title: phase.title,
     status: phase.tasks.every(t => t.status === 'completed') 
             ? 'completed' 
-            : (phase.tasks.some(t => t.status === 'completed' || t.status === 'in_progress') ? 'in_progress' : 'pending')
+            : (phase.tasks.some(t => t.status === 'completed' || t.status === 'in_progress') ? 'in_progress' : 'pending'),
+    tasks: phase.tasks.map(t => ({
+      description: t.description,
+      status: t.status,
+      // In a real app, we'd map this to a commit if available, 
+      // but for now we'll leave it undefined or map from subtasks if structured that way
+    }))
   })) || [];
 
   const allTasks: Task[] = syncData?.plan?.phases.flatMap(phase => 
@@ -103,124 +120,125 @@ function App() {
   })) || [];
 
   const completedCount = allTasks.filter(t => t.status === 'completed').length;
+  const inProgressCount = allTasks.filter(t => t.status === 'in_progress').length;
+  const pendingCount = allTasks.filter(t => t.status === 'pending').length;
+  const blockedCount = allTasks.filter(t => (t.status as any) === 'blocked').length;
   const progress = allTasks.length > 0 ? Math.floor((completedCount / allTasks.length) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-brand-bg-base text-brand-text-primary font-sans transition-colors duration-300">
-      <header className="bg-brand-bg-surface border-b border-brand-border sticky top-0 z-10" role="banner" aria-label="Dashboard Header">
-        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-brand-secondary rounded flex items-center justify-center font-bold text-white shadow-lg shadow-brand-primary/20">C</div>
-              <h1 className="text-xl font-bold tracking-tight uppercase">
-                Conductor <span className="text-brand-primary">Dashboard</span>
-              </h1>
-            </div>
-            <ModeToggle mode={syncMode} onModeChange={handleModeChange} />
-          </div>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              placeholder={syncMode === 'github' ? "Enter Repository URL..." : "Enter Local Directory Path..."}
-              value={repoUrl}
-              onChange={(e) => setRepoUrl(e.target.value)}
-              className="px-4 py-2 bg-brand-bg-overlay border border-brand-border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary w-full md:w-96 text-sm text-brand-text-secondary placeholder-brand-text-muted"
+    <div className="min-h-screen bg-background text-foreground font-sans transition-colors duration-300">
+      <Header 
+        onSync={() => handleSync()} 
+        loading={isLoading} 
+        hasData={!!syncData} 
+        theme={theme} 
+        onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
+      />
+
+      <main className="container mx-auto px-6 md:px-12 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+          {/* Repo Input - Full Width */}
+          <div className="col-span-12">
+            <RepoInput
+              onSubmit={handleRepoSubmit}
+              loading={isLoading}
+              defaultValue={repoUrl}
+              syncMode={syncMode}
+              onModeChange={handleModeChange}
             />
-            <button 
-              onClick={handleSync}
-              disabled={isLoading}
-              className={`px-6 py-2 rounded-md text-sm font-semibold uppercase tracking-wider transition-all shadow-md ${
-                isLoading ? 'bg-brand-bg-overlay text-brand-text-muted cursor-not-allowed' : 'bg-brand-primary hover:bg-brand-secondary text-white shadow-brand-primary/40 active:scale-95'
-              }`}
-            >
-              {isLoading ? 'Syncing...' : 'Sync'}
-            </button>
           </div>
+
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="col-span-12 flex flex-col items-center justify-center py-20"
+              >
+                <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+                <p className="text-muted-foreground font-medium">Synchronizing project artifacts...</p>
+              </motion.div>
+            ) : error && !syncData ? (
+              <motion.div
+                key="error"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="col-span-12 bg-destructive/5 border border-destructive/20 p-8 rounded-2xl text-center"
+              >
+                <div className="text-4xl mb-4">⚠️</div>
+                <h3 className="text-lg font-bold text-destructive mb-2">Sync Failed</h3>
+                <p className="text-muted-foreground max-w-md mx-auto mb-6">{error}</p>
+                <button 
+                  onClick={() => handleSync()}
+                  className="px-6 py-2 bg-destructive text-destructive-foreground rounded-lg font-bold uppercase tracking-widest text-[10px]"
+                >
+                  Retry Connection
+                </button>
+              </motion.div>
+            ) : syncData ? (
+              <motion.div
+                key="content"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="col-span-12 grid grid-cols-1 md:grid-cols-12 gap-8"
+              >
+                {/* Sidebar: Progress & Chart */}
+                <div className="col-span-12 md:col-span-4 lg:col-span-3 space-y-8">
+                  <ProgressOverview 
+                    progress={progress}
+                    completedTasks={completedCount}
+                    totalTasks={allTasks.length}
+                    inProgressTasks={inProgressCount}
+                    pendingTasks={pendingCount}
+                    blockedTasks={blockedCount}
+                    projectName={syncData.plan?.title}
+                    repoName={syncMode === 'github' ? repoUrl.split('github.com/')[1] : repoUrl}
+                    phasesCount={phases.length}
+                  />
+                  <CompletionChart 
+                    completed={completedCount} 
+                    total={allTasks.length} 
+                  />
+                </div>
+
+                {/* Main Content: Timeline, Tasks, and Activity */}
+                <div className="col-span-12 md:col-span-8 lg:col-span-9 space-y-8">
+                  <StageTimeline stages={phases} repoUrl={syncMode === 'github' ? repoUrl : undefined} />
+                  <TaskTable tasks={allTasks} />
+                  <RecentActivityPanel activities={activities} />
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="col-span-12 text-center py-20 border-2 border-dashed border-border rounded-2xl bg-muted/10"
+              >
+                <div className="text-5xl mb-4 opacity-20">🚀</div>
+                <h2 className="text-xl font-bold">Ready for Analysis</h2>
+                <p className="text-muted-foreground mt-2 max-w-md mx-auto">
+                  {syncMode === 'github' 
+                    ? "Enter a public GitHub repository URL above to visualize project progress and activity."
+                    : "Enter a local directory path above to visualize your local development progress."}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 border-t border-brand-border/30 flex justify-end">
-          <ThemeSelector currentTheme={theme} onThemeChange={setTheme} />
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8" role="main">
-        {error && (
-          <div className="mb-8 p-4 bg-brand-bg-overlay border border-brand-primary/30 rounded-lg flex items-center gap-3 text-brand-primary animate-in slide-in-from-top-4 duration-300">
-            <span className="text-xl">⚠️</span>
-            <div className="flex-1 text-sm font-semibold">{error}</div>
-            <button onClick={() => setError(null)} className="text-brand-text-muted hover:text-brand-text-primary">✕</button>
-          </div>
-        )}
-        {!syncData ? (
-          <div className="text-center py-24 border-2 border-dashed border-brand-border rounded-2xl">
-            <div className="text-6xl mb-4">🚀</div>
-            <h2 className="text-2xl font-bold text-brand-text-secondary">Ready for Launch</h2>
-            <p className="text-brand-text-muted mt-2 max-w-md mx-auto">
-              {syncMode === 'github' 
-                ? "Enter a public GitHub repository URL above to visualize project progress and activity."
-                : "Enter a local directory path above to visualize your local development progress."}
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-8 animate-in fade-in duration-500">
-            {/* Top Grid: Overview & Stages */}
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-              <section className="bg-brand-bg-surface p-8 rounded-xl border border-brand-border shadow-xl xl:col-span-1">
-                <h2 className="text-xs font-bold text-brand-text-muted uppercase tracking-widest mb-6 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-brand-primary rounded-full animate-pulse"></span>
-                  Mission Status: {syncData.plan?.title || 'Unknown Project'}
-                </h2>
-                <div className="flex flex-col items-center gap-6">
-                  <DonutChart progress={progress} />
-                  <div className="w-full space-y-6">
-                    <ProgressBar progress={progress} label="Overall Completion" color="bg-brand-primary" />
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="p-4 bg-brand-bg-overlay/50 rounded-lg border border-brand-border/50">
-                        <div className="text-[10px] text-brand-text-muted font-bold uppercase tracking-wider mb-1">Payloads</div>
-                        <div className="text-xl font-mono font-bold text-brand-text-secondary">{completedCount} / {allTasks.length}</div>
-                      </div>
-                      <div className="p-4 bg-brand-bg-overlay/50 rounded-lg border border-brand-border/50">
-                        <div className="text-[10px] text-brand-text-muted font-bold uppercase tracking-wider mb-1">State</div>
-                        <div className={`text-xl font-mono font-bold ${progress === 100 ? 'text-brand-success' : 'text-brand-warning'}`}>
-                          {progress === 100 ? 'STABLE' : 'ACTIVE'}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              <section className="bg-brand-bg-surface p-8 rounded-xl border border-brand-border shadow-xl xl:col-span-2">
-                <h2 className="text-xs font-bold text-brand-text-muted uppercase tracking-widest mb-6">Execution Timeline</h2>
-                <div className="bg-brand-bg-base/50 p-6 rounded-lg border border-brand-border">
-                  <StageTimeline stages={stages} />
-                </div>
-              </section>
-            </div>
-
-            {/* Bottom Grid: Tasks & Activity */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <section className="lg:col-span-2 space-y-4">
-                <div className="bg-brand-bg-surface rounded-xl border border-brand-border shadow-xl overflow-hidden">
-                  <div className="px-8 py-6 border-b border-brand-border flex justify-between items-center">
-                    <h2 className="text-xs font-bold text-brand-text-muted uppercase tracking-widest">Operation Logs</h2>
-                  </div>
-                  <div className="p-4">
-                    <TaskTable tasks={allTasks} />
-                  </div>
-                </div>
-              </section>
-
-              <aside className="lg:col-span-1">
-                <RecentActivityPanel activities={activities} />
-              </aside>
-            </div>
-          </div>
-        )}
       </main>
       
-      <footer className="max-w-7xl mx-auto py-8 px-4 text-center text-brand-text-muted text-xs uppercase tracking-widest">
-        Powered by Google Conductor Context Dashboard • 2026
+      <footer className="container mx-auto px-6 py-12 text-center border-t border-border mt-12">
+        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
+          Powered by Gemini • Conductor Intelligence Dashboard • 2026
+        </p>
       </footer>
+      <Toaster position="bottom-right" />
     </div>
   )
 }

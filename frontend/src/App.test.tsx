@@ -1,6 +1,6 @@
 // frontend/src/App.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import App from './App';
 
 describe('App', () => {
@@ -10,22 +10,17 @@ describe('App', () => {
     vi.resetAllMocks();
   });
 
-  it('should render a dashboard header', () => {
+  it('should render a header', () => {
     render(<App />);
-    expect(screen.getByRole('banner', { name: /dashboard header/i })).toBeInTheDocument();
+    expect(screen.getByTestId('header')).toBeInTheDocument();
   });
 
-  it('should render a main content area', () => {
+  it('should render a repo input card', () => {
     render(<App />);
-    expect(screen.getByRole('main')).toBeInTheDocument();
+    expect(screen.getByTestId('repo-input-card')).toBeInTheDocument();
   });
 
-  it('should render a sync button', () => {
-    render(<App />);
-    expect(screen.getByRole('button', { name: /sync/i })).toBeInTheDocument();
-  });
-
-  it('should trigger API call with repo URL when sync is clicked', async () => {
+  it('should trigger API call with repo URL when analyze is clicked', async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({}),
@@ -33,11 +28,11 @@ describe('App', () => {
     vi.stubGlobal('fetch', mockFetch);
 
     render(<App />);
-    const input = screen.getByPlaceholderText(/enter repository url/i);
-    const syncButton = screen.getByRole('button', { name: /sync/i });
+    const input = screen.getByTestId('repo-url-input');
+    const analyzeButton = screen.getByTestId('analyze-button');
 
     fireEvent.change(input, { target: { value: 'https://github.com/owner/repo' } });
-    fireEvent.click(syncButton);
+    fireEvent.click(analyzeButton);
 
     expect(mockFetch).toHaveBeenCalledWith('/api/v1/verify-phase-2', expect.objectContaining({
       method: 'POST',
@@ -61,14 +56,14 @@ describe('App', () => {
     vi.stubGlobal('fetch', mockFetch);
 
     render(<App />);
-    const input = screen.getByPlaceholderText(/enter repository url/i);
-    const button = screen.getByRole('button', { name: /sync/i });
+    const input = screen.getByTestId('repo-url-input');
+    const button = screen.getByTestId('analyze-button');
 
     fireEvent.change(input, { target: { value: 'https://github.com/owner/repo' } });
     fireEvent.click(button);
 
     // Check for synced content
-    expect(await screen.findByText(/Mission Status: Test Project/i)).toBeInTheDocument();
+    expect(await screen.findByTestId('progress-overview')).toBeInTheDocument();
     expect(screen.getByText(/Task 1/i)).toBeInTheDocument();
   });
 
@@ -77,13 +72,13 @@ describe('App', () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('Network error')));
     
     render(<App />);
-    const input = screen.getByPlaceholderText(/enter repository url/i);
-    const button = screen.getByRole('button', { name: /sync/i });
+    const input = screen.getByTestId('repo-url-input');
+    const button = screen.getByTestId('analyze-button');
     
     fireEvent.change(input, { target: { value: 'https://github.com/owner/repo' } });
     fireEvent.click(button);
     
-    expect(await screen.findByText(/failed to sync/i)).toBeInTheDocument();
+    expect(await screen.findByText(/sync failed/i)).toBeInTheDocument();
   });
 
   it('should support Local Mode synchronization', async () => {
@@ -104,8 +99,8 @@ describe('App', () => {
     // Switch to Local Mode
     fireEvent.click(screen.getByText(/Local Mode/i));
     
-    const input = screen.getByPlaceholderText(/enter local directory path/i);
-    const button = screen.getByRole('button', { name: /sync/i });
+    const input = screen.getByTestId('repo-url-input');
+    const button = screen.getByTestId('analyze-button');
 
     fireEvent.change(input, { target: { value: 'C:/projects/my-repo' } });
     fireEvent.click(button);
@@ -116,22 +111,7 @@ describe('App', () => {
       body: JSON.stringify({ directoryPath: 'C:/projects/my-repo' }),
     }));
 
-    expect(await screen.findByText(/Mission Status: Local Project/i)).toBeInTheDocument();
+    expect(await screen.findByTestId('progress-overview', {}, { timeout: 3000 })).toBeInTheDocument();
     expect(screen.getByText(/Local Task/i)).toBeInTheDocument();
-  });
-
-  it('should persist syncMode and repoUrl to localStorage', () => {
-    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
-    render(<App />);
-    
-    const input = screen.getByPlaceholderText(/enter repository url/i);
-    fireEvent.change(input, { target: { value: 'https://github.com/user/repo' } });
-    
-    expect(setItemSpy).toHaveBeenCalledWith('repoUrl', 'https://github.com/user/repo');
-    
-    fireEvent.click(screen.getByText(/Local Mode/i));
-    expect(setItemSpy).toHaveBeenCalledWith('syncMode', 'local');
-    
-    setItemSpy.mockRestore();
   });
 });

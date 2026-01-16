@@ -1,14 +1,13 @@
-// frontend/src/components/StageTimeline.test.tsx
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import StageTimeline from './StageTimeline';
-import type { Stage } from './StageTimeline';
+import type { Phase } from './StageTimeline';
 
 describe('StageTimeline', () => {
-  const stages: Stage[] = [
-    { id: '1', title: 'Planning', status: 'completed' },
-    { id: '2', title: 'Development', status: 'in_progress' },
-    { id: '3', title: 'Deployment', status: 'pending' },
+  const stages: Phase[] = [
+    { title: 'Planning', status: 'completed', tasks: [] },
+    { title: 'Development', status: 'in_progress', tasks: [] },
+    { title: 'Deployment', status: 'pending', tasks: [] },
   ];
 
   it('should render all stages', () => {
@@ -20,17 +19,18 @@ describe('StageTimeline', () => {
 
   it('should render the timeline container', () => {
       render(<StageTimeline stages={stages} />);
-      expect(screen.getByRole('region', { name: /stage timeline/i })).toBeInTheDocument();
+      expect(screen.getByText(/Development Timeline/i)).toBeInTheDocument();
   });
 
-    it('should visually indicate completed stages', () => {
-        const { container } = render(<StageTimeline stages={[{ id: '1', title: 'Done', status: 'completed' }]} />);
-        const indicator = container.querySelector('.text-brand-success');
-        expect(indicator).toBeInTheDocument();
+  it('should visually indicate completed stages', () => {
+        render(<StageTimeline stages={[{ title: 'Done', status: 'completed', tasks: [] }]} />);
+        // Checking for the "COMPLETED" badge text
+        expect(screen.getByText('COMPLETED')).toBeInTheDocument();
     });
-  
+
     it('should visually indicate in-progress stages', () => {
-        const { container } = render(<StageTimeline stages={[{ id: '1', title: 'WIP', status: 'in_progress' }]} />);
-        const indicator = container.querySelector('.text-brand-primary');
-        expect(indicator).toBeInTheDocument();
-    });});
+        render(<StageTimeline stages={[{ title: 'WIP', status: 'in_progress', tasks: [] }]} />);
+        // Checking for the "IN PROGRESS" badge text
+        expect(screen.getByText('IN PROGRESS')).toBeInTheDocument();
+    });
+});
