@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import cors from 'cors';
 import { config } from './config.js';
 import { fetchRepositoryFile, fetchRecentCommits } from './github.js';
 import { parseSetupState, parseTracksMd, parsePlanMd } from './conductor-parser.js';
@@ -8,6 +9,12 @@ import { fetchLocalCommits } from './utils/local-git.js';
 
 const app = express();
 const port = config.PORT;
+
+// Enable CORS
+const allowedOrigin = process.env.ALLOWED_ORIGIN || '*';
+app.use(cors({
+  origin: allowedOrigin
+}));
 
 app.use(express.json()); // Add this line to enable JSON body parsing
 
@@ -59,7 +66,7 @@ app.post('/api/v1/sync-local', async (req, res) => {
           // Resolve path: remove leading ./ and trailing /
           let trackPathRel = activeTrack.link.replace(/^\.\//, '').replace(/\/$/, '');
           const planPath = path.join(directoryPath, trackPathRel, 'plan.md');
-          
+
           const planContent = await readLocalFile(planPath);
           parsedData.plan = parsePlanMd(planContent);
         }
@@ -129,10 +136,10 @@ app.post('/api/v1/verify-phase-2', async (req, res) => {
         if (activeTrack) {
           // Resolve path: remove leading ./ and trailing /
           let trackPath = activeTrack.link.replace(/^\.\//, '').replace(/\/$/, '');
-          
+
           // Append plan.md
           const planPath = `${trackPath}/plan.md`;
-          
+
           const planContent = await fetchRepositoryFile(owner, repo, planPath);
           parsedData.plan = parsePlanMd(planContent);
         }

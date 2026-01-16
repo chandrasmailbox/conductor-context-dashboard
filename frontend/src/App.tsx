@@ -54,11 +54,12 @@ function App() {
   const handleSync = async (url?: string) => {
     const targetUrl = url || repoUrl;
     if (!targetUrl) return;
-    
+
     setIsLoading(true);
     setError(null);
     try {
-      const endpoint = syncMode === 'github' ? '/api/v1/verify-phase-2' : '/api/v1/sync-local';
+      const baseUrl = import.meta.env.VITE_API_URL || '';
+      const endpoint = syncMode === 'github' ? `${baseUrl}/api/v1/verify-phase-2` : `${baseUrl}/api/v1/sync-local`;
       const body = syncMode === 'github' ? { repoUrl: targetUrl } : { directoryPath: targetUrl };
 
       const response = await fetch(endpoint, {
@@ -93,9 +94,9 @@ function App() {
 
   const phases: Phase[] = syncData?.plan?.phases.map((phase) => ({
     title: phase.title,
-    status: phase.tasks.every(t => t.status === 'completed') 
-            ? 'completed' 
-            : (phase.tasks.some(t => t.status === 'completed' || t.status === 'in_progress') ? 'in_progress' : 'pending'),
+    status: phase.tasks.every(t => t.status === 'completed')
+      ? 'completed'
+      : (phase.tasks.some(t => t.status === 'completed' || t.status === 'in_progress') ? 'in_progress' : 'pending'),
     tasks: phase.tasks.map(t => ({
       description: t.description,
       status: t.status,
@@ -104,7 +105,7 @@ function App() {
     }))
   })) || [];
 
-  const allTasks: Task[] = syncData?.plan?.phases.flatMap(phase => 
+  const allTasks: Task[] = syncData?.plan?.phases.flatMap(phase =>
     phase.tasks.map((task, index) => ({
       id: `${phase.title}-task-${index}`,
       description: task.description,
@@ -127,12 +128,12 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans transition-colors duration-300">
-      <Header 
-        onSync={() => handleSync()} 
-        loading={isLoading} 
-        hasData={!!syncData} 
-        theme={theme} 
-        onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
+      <Header
+        onSync={() => handleSync()}
+        loading={isLoading}
+        hasData={!!syncData}
+        theme={theme}
+        onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       />
 
       <main className="container mx-auto px-6 md:px-12 py-8">
@@ -171,7 +172,7 @@ function App() {
                 <div className="text-4xl mb-4">⚠️</div>
                 <h3 className="text-lg font-bold text-destructive mb-2">Sync Failed</h3>
                 <p className="text-muted-foreground max-w-md mx-auto mb-6">{error}</p>
-                <button 
+                <button
                   onClick={() => handleSync()}
                   className="px-6 py-2 bg-destructive text-destructive-foreground rounded-lg font-bold uppercase tracking-widest text-[10px]"
                 >
@@ -188,7 +189,7 @@ function App() {
               >
                 {/* Sidebar: Progress & Chart */}
                 <div className="col-span-12 md:col-span-4 lg:col-span-3 space-y-8">
-                  <ProgressOverview 
+                  <ProgressOverview
                     progress={progress}
                     completedTasks={completedCount}
                     totalTasks={allTasks.length}
@@ -199,9 +200,9 @@ function App() {
                     repoName={syncMode === 'github' ? repoUrl.split('github.com/')[1] : repoUrl}
                     phasesCount={phases.length}
                   />
-                  <CompletionChart 
-                    completed={completedCount} 
-                    total={allTasks.length} 
+                  <CompletionChart
+                    completed={completedCount}
+                    total={allTasks.length}
                   />
                 </div>
 
@@ -223,7 +224,7 @@ function App() {
                 <div className="text-5xl mb-4 opacity-20">🚀</div>
                 <h2 className="text-xl font-bold">Ready for Analysis</h2>
                 <p className="text-muted-foreground mt-2 max-w-md mx-auto">
-                  {syncMode === 'github' 
+                  {syncMode === 'github'
                     ? "Enter a public GitHub repository URL above to visualize project progress and activity."
                     : "Enter a local directory path above to visualize your local development progress."}
                 </p>
@@ -232,7 +233,7 @@ function App() {
           </AnimatePresence>
         </div>
       </main>
-      
+
       <footer className="container mx-auto px-6 py-12 text-center border-t border-border mt-12">
         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">
           Powered by Gemini • Conductor Intelligence Dashboard • 2026
